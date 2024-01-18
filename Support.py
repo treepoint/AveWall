@@ -16,8 +16,6 @@ class Support:
         self.settings_file = setting_file
         self.main = Main
 
-        self.last_detected_process = None
-
     def returnConfig(self):
         return self.config 
     
@@ -36,7 +34,7 @@ class Support:
         }
 
         self.config['PROCESSES'] = {
-            1 : 'change_my_name.exe'
+            1 : 'change_my_name.exe, black.jpg'
         }
 
         self.writeConfig()
@@ -59,14 +57,16 @@ class Support:
         self.target_processes = []
         processes = self.config.items('PROCESSES')
 
+        for process in processes:
+            process_name, process_wallpaper = process[1].split(',')
+
+            self.target_processes.append([process_name, process_wallpaper.replace(' ', '')])
+
         #Для добавления программы в автозапуск
         try:
             self.autostart_action = self.config['AUTO']['action']
         except:
             self.autostart_action = False
-
-        for key, process in processes:
-            self.target_processes.append(process)
 
     def checkThatTargetProcessesRunning(self, target_processes):
         running_processes = []
@@ -75,22 +75,15 @@ class Support:
         for r_process in psutil.process_iter():
             running_processes.append(r_process.name())
 
-        #Проверим не работает ли прошлый процесс
-        if self.last_detected_process:
-            if self.last_detected_process in running_processes:
-                return True
-
         #Если нет — ищем по всему списку
         for process in target_processes:
-            if process in running_processes:
-                self.last_detected_process = process
-                return True
+            if process[0] in running_processes:
+                return process[1]
             
             #И небольшая пауза между этим всем, чтобы не было пиковой нагрузки
             time.sleep(0.05)
         
         #Нет так нет
-        self.last_detected_process = False
         return False
     
     def setWallpaper(self, path):

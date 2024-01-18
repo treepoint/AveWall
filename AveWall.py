@@ -31,19 +31,24 @@ class WallpaperChanger:
             case 'auto':
                 #Определяем есть ли указанные процессы
                 new_state = self.support.checkThatTargetProcessesRunning(self.support.target_processes)
+
+                if not new_state:
+                    new_state = 'default'
             case 'black':
-                new_state = True
+                new_state = 'black'
             case 'default':
-                new_state = False
+                new_state = 'default'
 
         if (new_state == self.current_state) and self.current_state is not None:
             return
 
         #Определяем обои
-        if new_state and new_state != self.current_state:
+        if new_state == 'black' and new_state != self.current_state:
             wallpaper = self.support.black_wallpaper
-        else:
+        elif new_state == 'default':
             wallpaper = self.support.default_wallpaper
+        else:
+            wallpaper = new_state
         
         #Выставляем
         self.support.setWallpaper(wallpaper)
@@ -63,5 +68,5 @@ if __name__ == '__main__':
 
 ##TODO:
 ##Фичи:
-#1. Свои обои для каждого аплика
-#2. Readme при первом запуске
+#1. Readme при первом запуске
+#2. Настройка соответствия аплика и приложения
