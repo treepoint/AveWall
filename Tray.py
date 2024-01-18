@@ -16,9 +16,9 @@ class Tray():
         self.menu = menu(
             item('Autostart with Windows', self.setAutostart, checked=lambda item: self.main.autostart_is_on), 
             item('Mode', menu(
-                item('Auto', self.setAutoMode), 
-                item('Set default', self.setDefaultMode), 
-                item('Set black', self.setBlackMode), 
+                item('Auto', self.setAutoMode, checked=lambda item: self.main.support.mode == 'auto'), 
+                item('Set default', self.setDefaultMode, checked=lambda item: self.main.support.mode == 'default'), 
+                item('Set black', self.setBlackMode, checked=lambda item: self.main.support.mode == 'black'), 
             )), 
             item('Set Windows wallpaper as default', self.getCurrentWindowsWallpaper), 
             item('Reload config', self.onConfigReload), 
@@ -56,7 +56,7 @@ class Tray():
         self.setMode('black')
 
     def setMode(self, mode):
-        self.main.mode = mode
+        self.main.support.mode = mode
         self.main.support.writeConfig()
 
     def setAutostart(self):
