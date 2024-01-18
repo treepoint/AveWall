@@ -12,10 +12,17 @@ class WallpaperChanger:
 
         self.config = self.support.returnConfig()
         self.current_state = None
+        self.mode = 'auto'
 
     def swapWallpapers(self):
-        #Определяем есть ли указанные процессы
-        new_state = self.support.checkThatTargetProcessesRunning(self.support.target_processes)
+        match self.mode:
+            case 'auto':
+                #Определяем есть ли указанные процессы
+                new_state = self.support.checkThatTargetProcessesRunning(self.support.target_processes)
+            case 'black':
+                new_state = True
+            case 'default':
+                new_state = False
 
         if (new_state == self.current_state) and self.current_state is not None:
             return
