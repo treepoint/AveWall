@@ -31,13 +31,13 @@ class Support:
         self.black_wallpaper = self.config['MAIN']['black_wallpaper']
 
         #Парсим список процессов
-        self.processes = []
+        self.target_processes = []
         processes = self.config.items('PROCESSES')
 
         for key, process in processes:
-            self.processes.append(process)
+            self.target_processes.append(process)
 
-    def checkThatTargetProcessesRunning(self):
+    def checkThatTargetProcessesRunning(self, target_processes):
         running_processes = []
         
         #Получим все запущенные процессы, искать будем в Python
@@ -50,7 +50,7 @@ class Support:
                 return True
 
         #Если нет — ищем по всему списку
-        for process in self.processes:
+        for process in target_processes:
             if process in running_processes:
                 self.last_detected_process = process
                 return True
@@ -64,3 +64,9 @@ class Support:
     
     def setWallpaper(self, path):
         ctypes.windll.user32.SystemParametersInfoW(20, 0, os.path.abspath(path), 3)
+
+    def chechDoubledStart(self):
+        if self.checkThatTargetProcessesRunning(['AveWall.exe']):
+            return True
+        else:
+            return False

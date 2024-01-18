@@ -11,7 +11,7 @@ class WallpaperChanger:
 
     def swapWallpapers(self):
         #Определяем есть ли указанные процессы
-        new_state = self.support.checkThatTargetProcessesRunning()
+        new_state = self.support.checkThatTargetProcessesRunning(self.support.target_processes)
 
         if new_state == self.current_state:
             return
@@ -30,7 +30,10 @@ class WallpaperChanger:
 
 if __name__ == '__main__':
     main = WallpaperChanger()
-    tray = Tray(main)
+
+    #Проверяем на повторный запуск, иначе выходим
+    if not main.support.chechDoubledStart():
+        tray = Tray(main)
 
 ##TODO:
 #1. Автостарт
@@ -39,4 +42,3 @@ if __name__ == '__main__':
 #4. Интегрировать все ресурсы прямо в аплик
 #5. Добавить кнопку Reload Config
 #6. При запуске с уже черной обоиной оно не возвращает на дефолт
-#7. Запретить мультизапуск
