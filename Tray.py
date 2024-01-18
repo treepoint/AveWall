@@ -14,6 +14,7 @@ class Tray():
         self.icon = Image.open(path)
 
         self.menu = menu(
+            item('Autostart with Windows', self.setAutostart, checked=lambda item: self.main.autostart_is_on), 
             item('Mode', menu(
                 item('Auto', self.setAutoMode), 
                 item('Set default', self.setDefaultMode), 
@@ -24,7 +25,7 @@ class Tray():
             item('Exit', self.onExit)
         )
 
-        self.tray = icon('AveWall', self.icon, menu=self.menu)
+        self.tray = icon(self.main.application_name, self.icon, menu=self.menu)
 
         #Запускаем воркер
         self.runWorker()
@@ -32,6 +33,10 @@ class Tray():
         #Запускаем трей
         self.tray.run()
     
+    def runWorker(self):
+        self.tray_worker = TrayWorker(self)
+        self.tray_worker.start()
+
     def onExit(self, icon, item):
         self.tray.stop()
 
@@ -42,14 +47,22 @@ class Tray():
         self.main.support.getDefaultWindowsWallpaper(True)
 
     def setAutoMode(self):
-        self.main.mode = 'auto'
+        self.setMode('auto')
 
     def setDefaultMode(self):
-        self.main.mode = 'default'
+        self.setMode('default')
 
     def setBlackMode(self):
-        self.main.mode = 'black'
+        self.setMode('black')
 
-    def runWorker(self):
-        self.app_worker = TrayWorker(self)
-        self.app_worker.start()
+    def setMode(self, mode):
+        self.main.mode = mode
+        self.main.support.writeConfig()
+
+    def setAutostart(self):
+        if self.main.autostart_is_on:
+            self.main.task_manager.removeFromAutostart()
+        else:
+            self.main.task_manager.addToAutostart()
+
+        self.main.autostart_is_on = not self.main.autostart_is_on

@@ -1,10 +1,15 @@
 from Tray import Tray
 from Support import Support
+from TaskManager import TaskManager
 
 class WallpaperChanger:
     def __init__(self):
         self.settings_file = 'settings.ini'
-        self.support = Support(self.settings_file)
+        self.application_name = 'AveWall'
+
+        self.support = Support(self.settings_file, self)
+
+        self.task_manager = TaskManager(self)
 
         self.support.readConfig()
         self.support.generateBlackWallpaper()
@@ -12,10 +17,17 @@ class WallpaperChanger:
 
         self.config = self.support.returnConfig()
         self.current_state = None
-        self.mode = 'auto'
+
+        self.autostart_is_on = self.task_manager.checkThatAutostartIsActive()
+
+        if self.support.autostart_action == 'add':
+            self.task_manager.addToAutostart()
+        
+        if self.support.autostart_action == 'delete':
+            self.task_manager.removeFromAutostart()
 
     def swapWallpapers(self):
-        match self.mode:
+        match self.support.mode:
             case 'auto':
                 #Определяем есть ли указанные процессы
                 new_state = self.support.checkThatTargetProcessesRunning(self.support.target_processes)
@@ -42,13 +54,14 @@ class WallpaperChanger:
 if __name__ == '__main__':
     main = WallpaperChanger()
 
-    if not main.support.chechDoubledStart():
-        tray = Tray(main)
+    if main.support.autostart_action:
+        sections = main.support.config.remove_section('AUTO')
+        main.support.writeConfig()
+    else:
+        if not main.support.chechDoubledStart():
+            tray = Tray(main)
 
 ##TODO:
-#Deploy   
-#1. PNG.icon вшить как-то в аплик. Или брать из ICO
-        
 ##Фичи:
 #1. Свои обои для каждого аплика
-#2. Автостарт
+#2. Readme при первом запуске

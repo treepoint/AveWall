@@ -12,8 +12,9 @@ import shutil
 import sys
 
 class Support:
-    def __init__(self, setting_file):
+    def __init__(self, setting_file, Main):
         self.settings_file = setting_file
+        self.main = Main
 
         self.last_detected_process = None
 
@@ -30,7 +31,8 @@ class Support:
         self.config['MAIN'] = {
             'black_wallpaper' : 'black.jpg',
             'default_wallpaper' : 'default.jpg',
-            'polling_timeout' : 1
+            'polling_timeout' : 1,
+            'mode' : 'auto' 
         }
 
         self.config['PROCESSES'] = {
@@ -51,10 +53,17 @@ class Support:
         self.polling_timeout = int(self.config['MAIN']['polling_timeout'])
         self.default_wallpaper = self.config['MAIN']['default_wallpaper']
         self.black_wallpaper = self.config['MAIN']['black_wallpaper']
+        self.mode = self.config['MAIN']['mode']
 
         #Парсим список процессов
         self.target_processes = []
         processes = self.config.items('PROCESSES')
+
+        #Для добавления программы в автозапуск
+        try:
+            self.autostart_action = self.config['AUTO']['action']
+        except:
+            self.autostart_action = False
 
         for key, process in processes:
             self.target_processes.append(process)
@@ -89,7 +98,7 @@ class Support:
 
     def chechDoubledStart(self):
         instance_count = len(list(process for process in psutil.process_iter() 
-                                  if process.name() == 'AveWall.exe'))
+                                  if process.name() == f'{self.main.application_name}.exe'))
         
         #Основной поток + worker
         if instance_count > 2:
@@ -113,7 +122,7 @@ class Support:
     def getCurrentPath(self):
         return os.getcwd()
     
-    #for including resources directly at application
+    #Чтобы включать картинки напрямую в аплик
     def resource_path(self, relative_path):
         base_path = getattr(
             sys,
