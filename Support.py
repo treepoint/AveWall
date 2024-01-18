@@ -66,7 +66,11 @@ class Support:
         ctypes.windll.user32.SystemParametersInfoW(20, 0, os.path.abspath(path), 3)
 
     def chechDoubledStart(self):
-        if self.checkThatTargetProcessesRunning(['svchost.exe']):
+        instance_count = len(list(process for process in psutil.process_iter() 
+                                  if process.name() == 'AveWall.exe'))
+        
+        #Основной поток + worker
+        if instance_count > 2:
             return True
         else:
             return False

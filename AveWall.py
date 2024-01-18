@@ -30,8 +30,9 @@ class WallpaperChanger:
 
 if __name__ == '__main__':
     main = WallpaperChanger()
-    
-    tray = Tray(main)
+
+    if not main.support.chechDoubledStart():
+        tray = Tray(main)
 
 ##TODO:
 #Deploy
