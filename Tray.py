@@ -10,7 +10,8 @@ class Tray():
         self.main = Main
 
         #Собираем сам трей
-        self.icon = Image.open('icon.png')
+        path = self.main.support.resource_path('icon.png')
+        self.icon = Image.open(path)
 
         self.menu = menu(
             item('Mode', menu(

@@ -9,6 +9,7 @@ import time
 #image generate
 from PIL import Image, ImageDraw
 import shutil
+import sys
 
 class Support:
     def __init__(self, setting_file):
@@ -98,7 +99,7 @@ class Support:
         
     def generateBlackWallpaper(self):
         if not os.path.isfile(self.black_wallpaper):
-            image = Image.new('RGB', (5120, 2560), 'black')
+            image = Image.new('RGB', (1, 1), 'black')
             ImageDraw.Draw(image)
 
             image.save(self.black_wallpaper)
@@ -111,3 +112,11 @@ class Support:
         
     def getCurrentPath(self):
         return os.getcwd()
+    
+    #for including resources directly at application
+    def resource_path(self, relative_path):
+        base_path = getattr(
+            sys,
+            '_MEIPASS',
+            os.path.dirname(os.path.abspath(__file__)))
+        return os.path.join(base_path, relative_path)
