@@ -59,19 +59,7 @@
   },
   {
    "optionDest": "datas",
-   "value": "E:/4. Code/AveWall/black.jpg;."
-  },
-  {
-   "optionDest": "datas",
-   "value": "E:/4. Code/AveWall/default.jpg;."
-  },
-  {
-   "optionDest": "datas",
    "value": "E:/4. Code/AveWall/icon.png;."
-  },
-  {
-   "optionDest": "datas",
-   "value": "E:/4. Code/AveWall/settings.ini;."
   }
  ],
  "nonPyinstallerOptions": {

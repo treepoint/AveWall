@@ -13,6 +13,7 @@ class Tray():
         self.icon = Image.open('icon.png')
 
         self.menu = menu(
+            item('Set Windows wallpaper as default', self.getCurrentWindowsWallpaper), 
             item('Reload config', self.onConfigReload), 
             item('Exit', self.onExit)
         )
@@ -30,6 +31,9 @@ class Tray():
 
     def onConfigReload(self, icon, item):
         self.main.support.readConfig()
+
+    def getCurrentWindowsWallpaper(self, icon, item):
+        self.main.support.getDefaultWindowsWallpaper(True)
 
     def runWorker(self):
         self.app_worker = TrayWorker(self)

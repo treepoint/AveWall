@@ -6,24 +6,45 @@ import configparser
 import psutil
 #sleep
 import time
+#image generate
+from PIL import Image, ImageDraw
+import shutil
 
 class Support:
     def __init__(self, setting_file):
         self.settings_file = setting_file
 
-        self.readConfig()
         self.last_detected_process = None
 
     def returnConfig(self):
         return self.config 
-
+    
     def writeConfig(self):
         with open(self.settings_file, 'w') as configfile:
             self.config.write(configfile)
 
+    def createDefaultConfigFile(self):
+        self.config = configparser.ConfigParser()
+
+        self.config['MAIN'] = {
+            'black_wallpaper' : 'black.jpg',
+            'default_wallpaper' : 'default.jpg',
+            'polling_timeout' : 1
+        }
+
+        self.config['PROCESSES'] = {
+            1 : 'change_my_name.exe'
+        }
+
+        self.writeConfig()
+
     def readConfig(self):
         self.config = configparser.ConfigParser()
-        self.config.read(self.settings_file)
+
+        #Проверяем, что файл в наличии
+        if len(self.config.read(self.settings_file)) != 1:
+            self.createDefaultConfigFile()
+            self.config.read(self.settings_file)
 
         #Парсим основные параметры
         self.polling_timeout = int(self.config['MAIN']['polling_timeout'])
@@ -75,5 +96,18 @@ class Support:
         else:
             return False
         
-    def getCurrentPath():
+    def generateBlackWallpaper(self):
+        if not os.path.isfile(self.black_wallpaper):
+            image = Image.new('RGB', (5120, 2560), 'black')
+            ImageDraw.Draw(image)
+
+            image.save(self.black_wallpaper)
+
+    def getDefaultWindowsWallpaper(self, is_force = False):
+        if (not os.path.isfile(self.default_wallpaper) or is_force):
+            current_wallpaper_location = os.path.join(os.getenv('APPDATA'), 'Microsoft/Windows/Themes', 'TranscodedWallpaper')
+
+            shutil.copy2(current_wallpaper_location, self.default_wallpaper)  
+        
+    def getCurrentPath(self):
         return os.getcwd()

@@ -6,6 +6,10 @@ class WallpaperChanger:
         self.settings_file = 'settings.ini'
         self.support = Support(self.settings_file)
 
+        self.support.readConfig()
+        self.support.generateBlackWallpaper()
+        self.support.getDefaultWindowsWallpaper()
+
         self.config = self.support.returnConfig()
         self.current_state = None
 
@@ -36,9 +40,10 @@ if __name__ == '__main__':
 
 ##TODO:
 #Deploy
-#1. Дефолтный конфиг
-#2. Дефолтные обоины (как дефолтную подтягивать текущую)
-#3. Интегрировать все ресурсы прямо в аплик
+#1. Дефолтный конфиг +
+#2. Генерация черной обоины +
+#3. Подтягивать обычную обоину из установленной сейчас +        
+#4. Интегрировать все ресурсы прямо в аплик
         
 ##Фичи:
 #1. Свои обои для каждого аплика
