@@ -11,8 +11,13 @@ class Tray():
 
         #Собираем сам трей
         self.icon = Image.open('icon.png')
-        self.menu = menu(item('Exit', self.onCLicked))
-        self.tray = icon('wc', self.icon, menu=self.menu)
+
+        self.menu = menu(
+            item('Reload config', self.onConfigReload), 
+            item('Exit', self.onExit)
+        )
+
+        self.tray = icon('AveWall', self.icon, menu=self.menu)
 
         #Запускаем воркер
         self.runWorker()
@@ -20,8 +25,11 @@ class Tray():
         #Запускаем трей
         self.tray.run()
     
-    def onCLicked(self, icon, item):
+    def onExit(self, icon, item):
         self.tray.stop()
+
+    def onConfigReload(self, icon, item):
+        self.main.support.readConfig()
 
     def runWorker(self):
         self.app_worker = TrayWorker(self)
