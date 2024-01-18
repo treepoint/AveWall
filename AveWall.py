@@ -7,13 +7,13 @@ class WallpaperChanger:
         self.support = Support(self.settings_file)
 
         self.config = self.support.returnConfig()
-        self.current_state = False
+        self.current_state = None
 
     def swapWallpapers(self):
         #Определяем есть ли указанные процессы
         new_state = self.support.checkThatTargetProcessesRunning(self.support.target_processes)
 
-        if new_state == self.current_state:
+        if (new_state == self.current_state) and self.current_state is not None:
             return
 
         #Определяем обои
@@ -40,4 +40,3 @@ if __name__ == '__main__':
 #2. Дефолтный конфиг
 #3. Дефолтные обоины (как дефолтную подтягивать текущую)
 #4. Интегрировать все ресурсы прямо в аплик
-#5. При запуске с уже черной обоиной оно не возвращает на дефолт
