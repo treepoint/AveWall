@@ -12,7 +12,7 @@ class Support:
         self.settings_file = setting_file
 
         self.readConfig()
-        self.last_detected_process = False
+        self.last_detected_process = None
 
     def returnConfig(self):
         return self.config 
@@ -66,7 +66,10 @@ class Support:
         ctypes.windll.user32.SystemParametersInfoW(20, 0, os.path.abspath(path), 3)
 
     def chechDoubledStart(self):
-        if self.checkThatTargetProcessesRunning(['AveWall.exe']):
+        if self.checkThatTargetProcessesRunning(['svchost.exe']):
             return True
         else:
             return False
+        
+    def getCurrentPath():
+        return os.getcwd()

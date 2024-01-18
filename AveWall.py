@@ -30,10 +30,8 @@ class WallpaperChanger:
 
 if __name__ == '__main__':
     main = WallpaperChanger()
-
-    #Проверяем на повторный запуск, иначе выходим
-    if not main.support.chechDoubledStart():
-        tray = Tray(main)
+    
+    tray = Tray(main)
 
 ##TODO:
 #Deploy
@@ -44,3 +42,4 @@ if __name__ == '__main__':
 ##Фичи:
 #1. Свои обои для каждого аплика
 #2. Автостарт
+#3. Брать дефолтную обоину из текущих, а черную — генерировать
