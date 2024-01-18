@@ -7,7 +7,7 @@
   },
   {
    "optionDest": "filenames",
-   "value": "E:/4. Code/wallpaperchanger/Main.py"
+   "value": "E:/4. Code/AveWall/AveWall.py"
   },
   {
    "optionDest": "onefile",
@@ -19,11 +19,11 @@
   },
   {
    "optionDest": "icon_file",
-   "value": "E:/4. Code/wallpaperchanger/icon.ico"
+   "value": "E:/4. Code/AveWall/icon.ico"
   },
   {
    "optionDest": "name",
-   "value": "wallpaperchanger"
+   "value": "AveWall"
   },
   {
    "optionDest": "clean_build",
@@ -59,19 +59,19 @@
   },
   {
    "optionDest": "datas",
-   "value": "E:/4. Code/wallpaperchanger/black.jpg;."
+   "value": "E:/4. Code/AveWall/black.jpg;."
   },
   {
    "optionDest": "datas",
-   "value": "E:/4. Code/wallpaperchanger/default.jpg;."
+   "value": "E:/4. Code/AveWall/default.jpg;."
   },
   {
    "optionDest": "datas",
-   "value": "E:/4. Code/wallpaperchanger/icon.png;."
+   "value": "E:/4. Code/AveWall/icon.png;."
   },
   {
    "optionDest": "datas",
-   "value": "E:/4. Code/wallpaperchanger/settings.ini;."
+   "value": "E:/4. Code/AveWall/settings.ini;."
   }
  ],
  "nonPyinstallerOptions": {
