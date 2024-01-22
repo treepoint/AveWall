@@ -2,22 +2,52 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="main.css">
     <link rel="stylesheet" type="text/css" href="main.css">
     <script type="text/javascript" src="/eel.js"></script>
     <title>AveWall</title>
     <link rel="icon" type="image/x-icon" href="icon.ico">
 </head>
     <body>
-        <div>
-            Hello world!
+        <div class="settings">
+            <h1>Settings</h1>
+            <div>
+                <input type="checkbox" id="autostart" name="settings" value='false'/>
+                <label for="autostart">Autostart with windows</label>
+            </div>
         </div>
-        <div>
-            <button id="set-black" type="button">Black</button>
+        <div class="processes">
+            <h1>Process list</h1>
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Wallpaper</th>
+                </th>
+                <tr>
+                    <td>Name</td>
+                    <td>Wallpaper</td>
+                </tr>
+                <tr>
+                    <td>Name</td>
+                    <td>Wallpaper</td>
+                </tr>
+            </table>
         </div>
-        <div>
-            <button id="set-default" type="button">Default</button>
+        <div class="mods">
+            <h1>Mode</h1>
+            <div id="mods" class="tabs">
+                <button id="set-auto" type="button" class="tab">Auto</button>
+                <button id="set-default" type="button" class="tab">Default</button>
+                <button id="set-black" type="button" class="tab">Black</button>
+            </div>
+        </div>
+        <div class="actions">
+            <h1>Actions</h1>
+            <div class="actions_buttons">
+                <button id="set-wall-as-default" type="button" class="button">Set windows wallpaper as default</button>
+                <button id="reload-config" type="button" class="button">Reload condig</button>
+                <button id="close" type="button" class="button">Close window</button>
+                <button id="exit" type="button" class="button">Exit application</button>
+            </div>
         </div>
         <script src="main.js"></script>
     </body>

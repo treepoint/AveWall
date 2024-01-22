@@ -49,14 +49,14 @@ class Support:
 
         #Получим все запущенные процессы, искать будем в Python
         for r_process in psutil.process_iter():
-            running_processes.append(r_process.name())
+            running_processes.append(r_process.name().lower())
 
         #Если нет — ищем по всему списку
         for process in processes:
             
             process = process[1].split(',')
 
-            if process[0] in running_processes:
+            if str(process[0]).lower() in running_processes:
                 return process[1]
             
             #И небольшая пауза между этим всем, чтобы не было пиковой нагрузки

@@ -1,14 +1,33 @@
 import os
 import eel
+import json
 
 class Interface():
-    def __init__(self):
+    def __init__(self, tray):
         eel.init('frontend')   
 
-        browserAndMode = self.getBrowserAndMode()
+        self.browserAndMode = self.getBrowserAndMode()
 
-        eel.browsers.set_path(browserAndMode['mode'], browserAndMode['browser_path'])  
-        eel.start('index.html', mode=browserAndMode['mode'], size=(400, 600))
+        self.tray = tray
+
+        #Прокидываем функции из Python в eel
+        eel._expose("getConfig", self.returnConfig)
+        eel._expose("getState", self.returnState)
+
+        #Автостарт
+        eel._expose("setAutostart", self.tray.setAutostart)
+
+        #Mode
+        eel._expose("setAutoMode", self.tray.setAutoMode)
+        eel._expose("setDefaultMode", self.tray.setDefaultMode)
+        eel._expose("setBlackMode", self.tray.setBlackMode)
+
+        #actions
+        eel._expose("onConfigReload", self.tray.onConfigReload)
+        eel._expose("getCurrentWindowsWallpaper", self.tray.getCurrentWindowsWallpaper)
+        eel._expose("onExit", self.tray.onExit)
+
+        eel.browsers.set_path(self.browserAndMode['mode'], self.browserAndMode['browser_path'])  
 
     def getBrowserAndMode(self):
         result = {
@@ -41,5 +60,24 @@ class Interface():
                     result['mode'] = 'chrome-app'
 
                     break
+
+        return result
+    
+    def open(self):
+        eel.start('index.html', mode=self.browserAndMode['mode'], size=(400, 600))
+
+    def returnState(self):
+        return json.dumps(self.tray.main.state)
+
+    def returnConfig(self):
+        result = {}
+
+        sections=self.tray.main.config.sections()
+
+        for section in sections:
+            items=self.tray.main.config.items(section)
+            result[section]=dict(items)
+
+        result=json.dumps(result)
 
         return result

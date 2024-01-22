@@ -11,10 +11,13 @@ class Main():
         self.support = Support(self.settings_file, self)
         self.config = self.support.readConfig()
 
+        #global state
+        self.state = {}
+
         #Обрабатываем автостарт
-        task_manager = TaskManager(self)
-        self.autostart_is_on = task_manager.checkThatAutostartIsActive()
-        task_manager.autostartProcessing(self.autostart_is_on)
+        self.task_manager = TaskManager(self)
+        self.state['autostart_is_on'] = self.task_manager.checkThatAutostartIsActive()
+        self.task_manager.autostartProcessing(self.state['autostart_is_on'])
 
 if __name__ == '__main__':
     main = Main()
@@ -31,3 +34,6 @@ if __name__ == '__main__':
 ##TODO:
 ##Фичи:
 #1. Настройка соответствия аплика и приложения
+#2. Подумать что-то с pooling time
+#3. Удаление-добавление в автостарт
+#4. Оптимизации (лаги в A Plague Tale)

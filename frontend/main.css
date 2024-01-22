@@ -1,3 +1,101 @@
-button {
+.button {
     margin-top: 12px;
+    border-radius: 6px;
+    border: 0px;
+    padding: 4px 8px;
+    font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: rgb(235, 235, 235);
+    border: 1px solid #b4b4b4;
+    min-width: fit-content;
+}
+
+.button:hover {
+    background-color: rgb(187, 187, 187);
+}
+
+.tabs {
+    display: flex;
+    flex-direction: row;
+}
+
+.tabs .tab {
+    display: flex;
+    flex-direction: row;
+    border-radius: 0px;
+    background-color: rgb(235, 235, 235);
+    padding: 4px 8px;
+    border: 1px solid #b4b4b4;
+}
+
+.tabs .tab:hover {
+    display: flex;
+    flex-direction: row;
+    border-radius: 0px;
+    background-color: rgb(187, 187, 187);
+}
+
+.tabs .tab.active {
+    font-weight: bold;
+    background-color: rgb(212, 212, 212);
+}
+
+.tabs .tab.active:hover {
+    font-weight: bold;
+    background-color: rgb(212, 212, 212);
+}
+
+.tabs .tab:hover {
+    background-color: rgb(187, 187, 187);
+}
+
+.tabs .tab:last-child {
+    display: flex;
+    flex-direction: row;
+    border-radius: 0px 6px 6px 0px;
+    border-left: 0px;
+}
+
+.tabs .tab:first-child{
+    display: flex;
+    flex-direction: row;
+    border-radius: 6px 0px 0px 6px;
+    border-right: 0px;
+}
+
+body {
+    font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 4px;
+}
+
+.settings {
+    display: flex;
+    flex-direction: column;
+}
+
+.process {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid #c4c4c4;
+    border-collapse: collapse;
+}
+
+.process_name {
+    padding: 4px 8px;
+}
+
+.process_wallpaper {
+    padding: 4px 8px;
+    margin-left: 8px;
+    border-left: 1px solid #c4c4c4;
+}
+
+.actions_buttons {
+    display: flex;
+    flex-direction: row;
+    column-gap: 12px;
+    flex-wrap: wrap;
 }

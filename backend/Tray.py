@@ -18,7 +18,7 @@ class Tray():
         self.icon = Image.open(path)
 
         self.menu = menu(
-            item('Autostart with Windows', self.setAutostart, checked=lambda item: self.main.autostart_is_on), 
+            item('Autostart with Windows', self.setAutostart, checked=lambda item: self.main.state['autostart_is_on']), 
             item('Show', self.showInterface), 
             item('Mode', menu(
                 item('Auto', 
@@ -44,9 +44,8 @@ class Tray():
         #Запускаем воркер
         self.runWorker()
 
-        #Прокидываем функции из Pyhton в eel
-        eel._expose("setBlackMode", self.setBlackMode)
-        eel._expose("setDefaultMode", self.setDefaultMode)
+        #Инициализируем интерфейс
+        self.interface = Interface(self)
 
         #Запускаем трей
         self.tray.run()
@@ -56,17 +55,16 @@ class Tray():
         self.tray_worker.start()
 
     def showInterface(self):
-        #Запускаем интерфейс
-        interface = Interface()
+        self.interface.open()
 
-    def onExit(self, icon, item):
+    def onExit(self, icon=False, item=False):
         self.tray.stop()
 
-    def onConfigReload(self, icon, item):
+    def onConfigReload(self, icon=False, item=False):
         self.main.support.readConfig()
 
-    def getCurrentWindowsWallpaper(self, icon, item):
-        self.main.support.getDefaultWindowsWallpaper(True)
+    def getCurrentWindowsWallpaper(self, icon=False, item=False):
+        self.wallpaperChainger.getDefaultWindowsWallpaper(True)
 
     def setAutoMode(self):
         self.setMode('auto')
@@ -82,9 +80,9 @@ class Tray():
         self.main.support.writeConfig(self.main.config)
 
     def setAutostart(self):
-        if self.main.autostart_is_on:
+        if self.main.state['autostart_is_on']:
             self.main.task_manager.removeFromAutostart()
         else:
             self.main.task_manager.addToAutostart()
 
-        self.main.autostart_is_on = not self.main.autostart_is_on
+        self.main.state['autostart_is_on'] = not self.main.state['autostart_is_on']
