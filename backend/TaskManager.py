@@ -82,9 +82,10 @@ class TaskManager:
 
         return is_task_exist
     
-    def autostartProcessing(self, autostart_is_on):
-        if autostart_is_on == 'add':
-            self.addToAutostart()
-        
-        if autostart_is_on == 'delete':
-            self.removeFromAutostart()
+    def autostartProcessing(self):
+        if self.main.config.has_section('AUTO'):
+            if self.main.config['AUTO']['action'] == 'add':
+                self.addToAutostart()
+            
+            if self.main.config['AUTO']['action'] == 'delete':
+                self.removeFromAutostart()

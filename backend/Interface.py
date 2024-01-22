@@ -1,6 +1,8 @@
 import os
 import eel
 import json
+import ctypes
+user32 = ctypes.windll.user32
 
 class Interface():
     def __init__(self, tray):
@@ -64,7 +66,13 @@ class Interface():
         return result
     
     def open(self):
-        eel.start('index.html', mode=self.browserAndMode['mode'], size=(400, 600))
+        width = 400
+        height = 600
+        eel.start('index.html', 
+                   mode=self.browserAndMode['mode'], 
+                   size=(width, height), 
+                   position=((user32.GetSystemMetrics(0)-width)/2, (user32.GetSystemMetrics(1)-600)/2)
+                )
 
     def returnState(self):
         return json.dumps(self.tray.main.state)

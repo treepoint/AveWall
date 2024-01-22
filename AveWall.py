@@ -11,13 +11,14 @@ class Main():
         self.support = Support(self.settings_file, self)
         self.config = self.support.readConfig()
 
-        #global state
+        #Глобальное состояние
         self.state = {}
 
         #Обрабатываем автостарт
         self.task_manager = TaskManager(self)
         self.state['autostart_is_on'] = self.task_manager.checkThatAutostartIsActive()
-        self.task_manager.autostartProcessing(self.state['autostart_is_on'])
+        
+        self.task_manager.autostartProcessing()
 
 if __name__ == '__main__':
     main = Main()
