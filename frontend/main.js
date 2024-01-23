@@ -19,21 +19,48 @@ function addNewProcess() {
     addProcess('', '');
 }
 
+function reOrder() {
+    //Add new order to each cell
+    for (let order_cell of document.getElementsByClassName("order_cell")) {
+        order_select = "<select>";
+
+        i = 1;
+        while (i != (new_row_id + 2)) {
+            if (i == order_cell.dataset.process_id) {
+                order_select += "<option selected>"+ i +"</option>";
+            } else {
+                order_select += "<option>"+ i +"</option>";
+            }
+            
+            i += 1;
+        }
+    
+        order_select += "</select>";        
+        order_cell.innerHTML = order_select;
+    }
+}
+
 function addProcess(name, wallpaper) {
     new_row_id = process_table.rows.length;
 
     new_row = process_table.insertRow(new_row_id);
-    new_row.id = "process_" + (new_row_id + 1).toString();
+    new_row.id = "process_" + (new_row_id + 1);
 
-    process_cell = new_row.insertCell(0);
-    wallpaper_cell = new_row.insertCell(1);
-    delete_cell = new_row.insertCell(2);
+    order_cell = new_row.insertCell(0);
+    order_cell.classList.add("order_cell");
+    order_cell.dataset.process_id = new_row_id + 1;
 
-    process_cell.innerHTML = "<div class='process_name'>" + name + "</div>";
-    wallpaper_cell.innerHTML = "<div class='process_wallpaper'>" + wallpaper + "</div>";
+    process_cell = new_row.insertCell(1);
+    wallpaper_cell = new_row.insertCell(2);
+    delete_cell = new_row.insertCell(3);
+
+    process_cell.innerHTML = "<div class='process_item'>" + name + "</div>";
+    wallpaper_cell.innerHTML = "<div class='process_item'>" + wallpaper + "</div>";
     delete_cell.innerHTML = "<div class='delete_process' id='delete_process_"+(new_row_id+ 1)+"' process_id='" + (new_row_id + 1) + "'></div>";
 
     document.getElementById("delete_process_"+(new_row_id+ 1)).onclick = deleteProcess;
+
+    reOrder();
 }
 
 function initProcesses(processes) {

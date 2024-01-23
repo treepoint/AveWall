@@ -90,20 +90,22 @@ h1 {
     font-size: 14px;
 }
 
-.process_name {
+.process_item {
     background-color: rgb(235, 235, 235);
-    padding: 4px;
+    padding: 4px 8px;
     border-radius: 6px;
     padding-left: 8px;
     height: 20px;
 }
 
-.process_wallpaper {
+select {
     background-color: rgb(235, 235, 235);
-    padding: 4px;
+    padding: 4px 8px;
     border-radius: 6px;
     padding-left: 8px;
-    height: 20px;
+    border: none;
+    padding-right: 4px;
+    outline: none;
 }
 
 .process_name:hover, .process_wallpaper:hover {
@@ -195,4 +197,11 @@ h1 {
         content: '';
         background: rgb(180, 84, 84);
     }
+}
+
+.hint {
+    font-size: 12px;
+    margin-bottom: 12px;
+    color: #8b8b8b;
+    width: calc(100vw - 28px);
 }
