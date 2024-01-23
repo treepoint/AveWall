@@ -6,6 +6,45 @@ async function setAutostart() {
 }
 
 /**************************************************
+* Processes
+***************************************************/
+process_table = document.getElementById("process_table");
+
+function deleteProcess(event) {
+    process_id = event.target.attributes.process_id.nodeValue;
+    document.getElementById("process_" + process_id).remove();
+}
+
+function addNewProcess() {
+    addProcess('', '');
+}
+
+function addProcess(name, wallpaper) {
+    new_row_id = process_table.rows.length;
+
+    new_row = process_table.insertRow(new_row_id);
+    new_row.id = "process_" + (new_row_id + 1).toString();
+
+    process_cell = new_row.insertCell(0);
+    wallpaper_cell = new_row.insertCell(1);
+    delete_cell = new_row.insertCell(2);
+
+    process_cell.innerHTML = "<div class='process_name'>" + name + "</div>";
+    wallpaper_cell.innerHTML = "<div class='process_wallpaper'>" + wallpaper + "</div>";
+    delete_cell.innerHTML = "<div class='delete_process' id='delete_process_"+(new_row_id+ 1)+"' process_id='" + (new_row_id + 1) + "'></div>";
+
+    document.getElementById("delete_process_"+(new_row_id+ 1)).onclick = deleteProcess;
+}
+
+function initProcesses(processes) {
+    for (let process of Object.values(processes)) {
+        split_process = process.split(", ");
+
+        addProcess(split_process[0], split_process[1]);
+    }
+}
+
+/**************************************************
 * MODS
 ***************************************************/
 function setMode(mode) {
@@ -77,14 +116,22 @@ async function initState() {
 async function initConfig() {
     let config = await eel.getConfig()();
 
-    //Инициируем мод
-    mode = JSON.parse(config)['MAIN']['mode'];
+    config = JSON.parse(config)
+
+    //Init Processes
+    initProcesses(config['PROCESSES']);
+
+    //Init MODS
+    mode = config['MAIN']['mode'];
     setMode(mode)
 }
 
 function setActions() {
     //Autostart
     document.getElementById('autostart').onchange = setAutostart;
+
+    //processes
+    document.getElementById('plus').onclick = addNewProcess;
 
     //MODS
     document.getElementById('set-auto').onclick = setAuto;

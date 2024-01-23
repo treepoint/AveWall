@@ -77,26 +77,122 @@ h1 {
     margin-top: -12px;
 }
 
-.process {
-    display: flex;
-    flex-direction: row;
-    border: 1px solid #c4c4c4;
-    border-collapse: collapse;
-}
-
-.process_name {
-    padding: 4px 8px;
-}
-
-.process_wallpaper {
-    padding: 4px 8px;
-    margin-left: 8px;
-    border-left: 1px solid #c4c4c4;
-}
-
 .actions_buttons {
     display: flex;
     flex-direction: row;
     column-gap: 12px;
     flex-wrap: wrap;
+}
+
+.process_table {
+    text-align: left;
+    width: calc(100vw - 35px);
+    font-size: 14px;
+}
+
+.process_name {
+    background-color: rgb(235, 235, 235);
+    padding: 4px;
+    border-radius: 6px;
+    padding-left: 8px;
+    height: 20px;
+}
+
+.process_wallpaper {
+    background-color: rgb(235, 235, 235);
+    padding: 4px;
+    border-radius: 6px;
+    padding-left: 8px;
+    height: 20px;
+}
+
+.process_name:hover, .process_wallpaper:hover {
+    background-color: rgb(187, 187, 187);
+}
+
+.plus {
+    margin-top: 4px;
+    width: 32px;
+    height: 32px;
+    margin-left: calc(50% - 16px);
+    
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    
+    position: relative;
+      
+    &:after, &:before {
+      content: '';
+      position: absolute;
+      background: #b9b9b9;
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+      border-radius: 5px;
+    }
+    
+    &:after {
+      width: 21px;
+      height: 3px;
+      left: 6px;
+      top: 15px;
+    }
+    
+    &:before {
+      width: 3px;
+      height: 22px;
+      left: 15px;
+      top: 6px;
+    }
+  }
+
+.plus:hover {
+    &:after, &:before {
+        content: '';
+        background: rgb(138, 138, 138);
+    }
+}
+
+.delete_process {
+    transform: rotate(45deg);
+    margin-top: 0px;
+    width: 32px;
+    height: 32px;
+    margin-left: calc(50% - 16px);
+
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+
+    position: relative;
+      
+    &:after, &:before {
+        content: '';
+        position: absolute;
+        background: #b9b9b9;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+    }
+    
+    &:after {
+        width: 17px;
+        height: 3px;
+        left: 7px;
+        top: 14px;
+    }
+    
+    &:before {
+        width: 3px;
+        height: 17px;
+        left: 14px;
+        top: 7px;
+    }
+  }
+
+.delete_process:hover {
+    &:after, &:before {
+        content: '';
+        background: rgb(180, 84, 84);
+    }
 }
