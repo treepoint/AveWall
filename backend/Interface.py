@@ -66,12 +66,12 @@ class Interface():
         return result
     
     def open(self):
-        width = 520
+        width = 540
         height = 700
         eel.start('index.html', 
                    mode=self.browserAndMode['mode'], 
                    size=(width, height), 
-                   position=((user32.GetSystemMetrics(0)-width)/2, (user32.GetSystemMetrics(1)-600)/2)
+                   position=((user32.GetSystemMetrics(0)-width)/2, (user32.GetSystemMetrics(1)-height)/2)
                 )
 
     def returnState(self):

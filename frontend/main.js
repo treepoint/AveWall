@@ -6,6 +6,34 @@ async function setAutostart() {
 }
 
 /**************************************************
+* Table
+***************************************************/
+function detach(element) {
+    return element.parentElement.removeChild(element);
+  }
+  
+  function move(src, dest, isBefore) {
+    dest.insertAdjacentElement(isBefore ? 'beforebegin' : 'afterend', detach(src));
+  }
+  
+  function children(element, selector) {
+    return element.querySelectorAll(selector);
+  }
+  
+  function child(element, selector, index) {
+    return children(element, selector)[index];
+  }
+  
+  function row(table, index) {
+    // Generic Version: return child(table.querySelector('tbody'), 'tr', index);
+    return child(table.querySelector('tbody'), 'tr', index);
+  }
+  
+  function moveRow(table, fromIndex, toIndex, isBefore) {
+    move(row(table, fromIndex), row(table, toIndex), isBefore);
+  }
+
+/**************************************************
 * Processes
 ***************************************************/
 process_table = document.getElementById("process_table");
@@ -19,17 +47,69 @@ function addNewProcess() {
     addProcess('', '');
 }
 
+function updateProcessIdForRow(row, new_process_id) {
+    //row parameters
+    row.id = "process_" + new_process_id;
+    row.dataset.process_id = new_process_id;
+
+    //process order select
+    row.children[0].dataset.process_id = new_process_id;
+
+    for (let option of row.children[0].children[0].children) {
+        option.dataset.current_index = new_process_id;
+    }
+
+    //for delete button
+    row.children[3].dataset.process_id = new_process_id;
+    row.children[3].children[0].attributes.process_id.nodeValue = new_process_id;
+    row.children[3].children[0].id = "process_" + new_process_id;
+}
+
+function onOrderChange(select) {
+    new_index = select.value - 1;
+    current_index = select.options[select.selectedIndex].dataset.current_index - 1;
+
+    if (new_index == current_index) {
+        return;
+    }
+
+    if (new_index > current_index) {
+        isBefore = false;
+    } else {
+        isBefore = true;
+    }
+
+    moveRow(process_table, current_index, new_index, isBefore);
+
+    //Меняем все ID на новые
+    let rows = document.getElementsByClassName("process_rows");
+
+    new_process_id = 0;
+    
+    for (let row of rows) {
+        new_process_id += 1;
+        updateProcessIdForRow(row, new_process_id);
+    }
+
+    //Задаем правильные выборы в селектах процессов
+    for (let select of document.getElementsByClassName("process_order_select")) { 
+        select.selectedIndex = select.children[0].dataset.current_index - 1;
+    }
+}
+
 function reOrder() {
     //Add new order to each cell
     for (let order_cell of document.getElementsByClassName("order_cell")) {
-        order_select = "<select>";
+        order_select = "<select onchange='onOrderChange(this)' class='process_order_select'>";
+
+        current_index = order_cell.dataset.process_id;
 
         i = 1;
         while (i != (new_row_id + 2)) {
-            if (i == order_cell.dataset.process_id) {
-                order_select += "<option selected>"+ i +"</option>";
+            if (i == current_index) {
+                order_select += "<option selected value=" + i + " data-current_index=" + current_index + ">"+ i +"</option>";
             } else {
-                order_select += "<option>"+ i +"</option>";
+                order_select += "<option value=" + i + " data-current_index=" + current_index + ">"+ i +"</option>";
             }
             
             i += 1;
@@ -45,6 +125,8 @@ function addProcess(name, wallpaper) {
 
     new_row = process_table.insertRow(new_row_id);
     new_row.id = "process_" + (new_row_id + 1);
+    new_row.dataset.process_id = new_row_id + 1;
+    new_row.classList.add("process_rows");
 
     order_cell = new_row.insertCell(0);
     order_cell.classList.add("order_cell");
