@@ -205,3 +205,25 @@ select {
     color: #8b8b8b;
     width: calc(100vw - 28px);
 }
+
+.modal {
+    width: fit-content;
+    height: fit-content;
+    background: #f6fff9;
+    border: 1px solid #339959;
+    border-bottom: 2px solid #339959;
+    padding: 4px 16px;
+    font-size: 14px;
+    border-radius: 4px;
+    color: #107d15;
+    float: left;
+    position: fixed;
+    bottom: 12px;
+    left: calc(100vw - 94px);
+    box-shadow: 0px 2px 4px #00000052;
+    transition: 75ms linear; 
+}
+
+.modal.hidden {
+    bottom: -36px;
+}
