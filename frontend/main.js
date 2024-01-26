@@ -8,8 +8,10 @@ async function setAutostart() {
 /**************************************************
 * Notification
 ***************************************************/
-function showSaved() {
+function showModal(content) {
     modal = document.getElementById("modal");
+
+    modal.innerHTML = content;
 
     comfortable_delay = Math.random() * (350 - 250) + 250;
 
@@ -59,20 +61,21 @@ function detach(element) {
 ***************************************************/
 process_table = document.getElementById("process_table");
 
-function saveProcesses() {
-    processes = [];
+async function saveProcesses() {
+    processes = { items : [] };
 
     for (let row of process_table.rows) {
-        processes.push(
+        processes.items.push(
             {
+                id : row.children[0].children[0].value, 
                 name : row.children[1].children[0].innerHTML, 
                 wallpaper : row.children[2].children[0].innerHTML
             });
     }
 
-    console.log(processes);
+    await eel.saveProcesses(processes)();
 
-    showSaved();
+    showModal('Changes applied');
 }
 
 function deleteProcess(event) {
@@ -198,6 +201,10 @@ function addProcess(name, wallpaper) {
     reOrder();
 }
 
+function clearProcessTable() {
+    process_table.children[0].remove();
+}
+
 function initProcesses(processes) {
     for (let process of Object.values(processes)) {
         split_process = process.split(", ");
@@ -233,36 +240,41 @@ async function setAuto() {
     await eel.setAutoMode()();
     setMode('auto');
 
-    showSaved();
+    showModal('Auto mode is enable');
 }
 
 async function setDefault() {
     await eel.setDefaultMode()();
     setMode('default');
 
-    showSaved();
+    showModal('Default mode is enable');
 }
 
 async function setBlack() {
     await eel.setBlackMode()();
     setMode('black');
 
-    showSaved();
+    showModal('Black mode is enable');
 }
 
 /**************************************************
 * ACTIONS
 ***************************************************/
 async function onConfigReload() {
+
+    clearProcessTable();
+
     await eel.onConfigReload()();
 
-    showSaved();
+    initConfig();
+
+    showModal('Reloaded');
 }
 
 async function getCurrentWindowsWallpaper() {
     await eel.getCurrentWindowsWallpaper()();
 
-    showSaved();
+    showModal('Setted');
 }
 
 function onClose() {
@@ -325,20 +337,3 @@ async function init() {
 
 //RUN
 init();
-
-
-
-/* {
-    "MAIN": 
-    {"black_wallpaper": "./assets/black.jpg",
-    "default_wallpaper": "./assets/default.jpg", 
-    "polling_timeout": "1", 
-    "mode": "default"}, +
-
-    "PROCESSES": 
-    {"1": "APlagueTaleInnocence_x64_WIDESCREEN.exe, ./assets/black.jpg", 
-    "2": "APlagueTaleInnocence_x64.exe, ./assets/black.jpg", 
-    "3": "EoCApp.exe, ./assets/black.jpg", 
-    "4": "launcher.exe, ./assets/black.jpg", 
-    "5": "filezilla.exe, ./assets/black.jpg"}
-} */

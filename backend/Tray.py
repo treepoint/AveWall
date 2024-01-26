@@ -61,7 +61,7 @@ class Tray():
         self.tray.stop()
 
     def onConfigReload(self, icon=False, item=False):
-        self.main.support.readConfig()
+        self.main.config = self.main.support.readConfig()
 
     def getCurrentWindowsWallpaper(self, icon=False, item=False):
         self.wallpaperChainger.getDefaultWindowsWallpaper(True)

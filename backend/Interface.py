@@ -19,6 +19,9 @@ class Interface():
         #Автостарт
         eel._expose("setAutostart", self.tray.setAutostart)
 
+        #Процессы
+        eel._expose("saveProcesses", self.saveProcesses)
+
         #Mode
         eel._expose("setAutoMode", self.tray.setAutoMode)
         eel._expose("setDefaultMode", self.tray.setDefaultMode)
@@ -39,13 +42,13 @@ class Interface():
 
         chromium_browser_array = [
             'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',
-            'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe',
-            'C:/Program Files/Google/Chrome/Application/chrome.exe'
+            'C:/Program Files/Google/Chrome/Application/chrome.exe',
+            'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe'
         ]
 
         firefox_array = [
-            'C:/Program Files (x86)/Google/Mozilla Firefox/Firefox.exe',
-            'C:/Program Files/Google/Mozilla Firefox/Firefox.exe'
+            'C:/Program Files/Google/Mozilla Firefox/Firefox.exe',
+            'C:/Program Files (x86)/Google/Mozilla Firefox/Firefox.exe'
         ]
 
         for browser in chromium_browser_array:
@@ -66,7 +69,7 @@ class Interface():
         return result
     
     def open(self):
-        width = 540
+        width = 544
         height = 700
         eel.start('index.html', 
                    mode=self.browserAndMode['mode'], 
@@ -89,3 +92,13 @@ class Interface():
         result=json.dumps(result)
 
         return result
+    
+    def saveProcesses(self, processes_json):
+        processes = {}
+
+        for process in processes_json['items']:
+            processes[process['id']] = f'{process['name']}, {process['wallpaper']}'
+        
+        self.tray.main.config['PROCESSES'] = processes
+            
+        self.tray.main.support.writeConfig(self.tray.main.config)
