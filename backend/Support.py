@@ -60,7 +60,7 @@ class Support:
                 return process[1]
             
             #И небольшая пауза между этим всем, чтобы не было пиковой нагрузки
-            time.sleep(0.05)
+            time.sleep(0.01)
         
         #Нет так нет
         return False
