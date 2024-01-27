@@ -56,6 +56,6 @@ class WallpaperChanger:
 
     def getDefaultWindowsWallpaper(self, is_force = False):
         if (not os.path.isfile(self.main.config['MAIN']['default_wallpaper']) or is_force):
-            current_wallpaper_location = os.path.join(os.getenv('APPDATA'), 'Microsoft/Windows/Themes', 'TranscodedWallpaper')
-
+            current_wallpaper_location = os.path.join(os.getenv('APPDATA'), 'Microsoft', 'Windows', 'Themes', 'TranscodedWallpaper')
+            
             shutil.copy2(current_wallpaper_location, self.main.config['MAIN']['default_wallpaper'])  

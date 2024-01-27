@@ -240,21 +240,21 @@ async function setAuto() {
     await eel.setAutoMode()();
     setMode('auto');
 
-    showModal('Auto mode is enable');
+    showModal('Auto mode is enabled');
 }
 
 async function setDefault() {
     await eel.setDefaultMode()();
     setMode('default');
 
-    showModal('Default mode is enable');
+    showModal('Default mode is enabled');
 }
 
 async function setBlack() {
     await eel.setBlackMode()();
     setMode('black');
 
-    showModal('Black mode is enable');
+    showModal('Black mode is enabled');
 }
 
 /**************************************************
