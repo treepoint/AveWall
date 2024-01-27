@@ -194,12 +194,12 @@ function addProcess(name, wallpaper) {
     delete_cell = new_row.insertCell(4);
 
     process_cell.innerHTML = "<div class='process_item half-round'>" + name + "</div>";
-    process_choice_cell.innerHTML = "<label for='process_choice_"+(new_row_id+ 1)+"' class='custom-file-upload'><i class='fa fa-cloud-upload'></i>SET</label><input id='process_choice_"+(new_row_id+ 1)+"' type='file'/>";
+    process_choice_cell.innerHTML = "<button id='process_choice_" + (new_row_id+ 1) + "' class='custom-file-upload''>SET</button>";
     wallpaper_cell.innerHTML = "<div class='process_item hundred'>" + wallpaper + "</div>";
     delete_cell.innerHTML = "<div class='delete_process' id='delete_process_"+(new_row_id+ 1)+"' process_id='" + (new_row_id + 1) + "'></div>";
 
     document.getElementById("delete_process_"+(new_row_id+ 1)).onclick = deleteProcess;
-    document.getElementById("process_choice_"+(new_row_id+ 1)).onchange = changeProcessfile;
+    document.getElementById("process_choice_"+(new_row_id+ 1)).onclick = changeProcessfile;
 
     reOrder();
 }
@@ -208,12 +208,17 @@ function clearProcessTable() {
     process_table.children[0].remove();
 }
 
-function changeProcessfile(file) {
-    path = file.target.value;
-    filename = path.replace(/^.*\\/, "");
+async function changeProcessfile(event) {
+    file_path = await eel.getFileWithPath()();
 
-    process_cell = file.target.parentElement.parentElement.children[1].children[0];
-    process_cell.innerHTML=filename;
+    file_with_path = file_path.replace(/^.*\\/, "");
+
+    path_array = file_with_path.split('/').slice();
+
+    file_name = path_array[path_array.length - 1];
+
+    process_cell = event.target.parentElement.parentElement.children[1].children[0];
+    process_cell.innerHTML=file_name;
 
     saveProcesses();
 }

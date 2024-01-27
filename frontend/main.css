@@ -260,8 +260,10 @@ input[type="file"] {
     min-width: max-content;
     font-weight: bold;
     margin-left: -4px;
-    height: 20px;
+    height: 28px;
     margin-right: 4px;
+    outline: none;
+    border: none;
 }
 
 .custom-file-upload:hover {

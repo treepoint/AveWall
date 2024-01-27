@@ -2,6 +2,8 @@ import os
 import eel
 import json
 import ctypes
+from tkinter import *
+from tkinter import filedialog
 user32 = ctypes.windll.user32
 
 class Interface():
@@ -31,6 +33,9 @@ class Interface():
         eel._expose("onConfigReload", self.tray.onConfigReload)
         eel._expose("getCurrentWindowsWallpaper", self.tray.getCurrentWindowsWallpaper)
         eel._expose("onExit", self.tray.onExit)
+
+        #Файлы
+        eel._expose("getFileWithPath", self.getFileWithPath)
 
         eel.browsers.set_path(self.browserAndMode['mode'], self.browserAndMode['browser_path'])  
 
@@ -69,8 +74,8 @@ class Interface():
         return result
     
     def open(self):
-        width = 590
-        height = 700
+        width = 610
+        height = 710
         eel.start('index.html', 
                    mode=self.browserAndMode['mode'], 
                    size=(width, height), 
@@ -102,3 +107,10 @@ class Interface():
         self.tray.main.config['PROCESSES'] = processes
             
         self.tray.main.support.writeConfig(self.tray.main.config)
+
+    def getFileWithPath(self):
+        root = Tk()
+        root.withdraw()
+        root.wm_attributes('-topmost', 1)
+        path = filedialog.askopenfilename()
+        return path
