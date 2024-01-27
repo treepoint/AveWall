@@ -69,7 +69,7 @@ async function saveProcesses() {
             {
                 id : row.children[0].children[0].value, 
                 name : row.children[1].children[0].innerHTML, 
-                wallpaper : row.children[2].children[0].innerHTML
+                wallpaper : row.children[3].children[0].innerHTML
             });
     }
 
@@ -114,9 +114,9 @@ function updateProcessIdForRows() {
         }
 
         //for delete button
-        row.children[3].dataset.process_id = new_process_id;
-        row.children[3].children[0].attributes.process_id.nodeValue = new_process_id;
-        row.children[3].children[0].id = "process_" + new_process_id;
+        row.children[4].dataset.process_id = new_process_id;
+        row.children[4].children[0].attributes.process_id.nodeValue = new_process_id;
+        row.children[4].children[0].id = "process_" + new_process_id;
     }
 }
 
@@ -189,20 +189,33 @@ function addProcess(name, wallpaper) {
     order_cell.dataset.process_id = new_row_id + 1;
 
     process_cell = new_row.insertCell(1);
-    wallpaper_cell = new_row.insertCell(2);
-    delete_cell = new_row.insertCell(3);
+    process_choice_cell = new_row.insertCell(2);
+    wallpaper_cell = new_row.insertCell(3);
+    delete_cell = new_row.insertCell(4);
 
-    process_cell.innerHTML = "<div class='process_item'>" + name + "</div>";
-    wallpaper_cell.innerHTML = "<div class='process_item'>" + wallpaper + "</div>";
+    process_cell.innerHTML = "<div class='process_item half-round'>" + name + "</div>";
+    process_choice_cell.innerHTML = "<label for='process_choice_"+(new_row_id+ 1)+"' class='custom-file-upload'><i class='fa fa-cloud-upload'></i>SET</label><input id='process_choice_"+(new_row_id+ 1)+"' type='file'/>";
+    wallpaper_cell.innerHTML = "<div class='process_item hundred'>" + wallpaper + "</div>";
     delete_cell.innerHTML = "<div class='delete_process' id='delete_process_"+(new_row_id+ 1)+"' process_id='" + (new_row_id + 1) + "'></div>";
 
     document.getElementById("delete_process_"+(new_row_id+ 1)).onclick = deleteProcess;
+    document.getElementById("process_choice_"+(new_row_id+ 1)).onchange = changeProcessfile;
 
     reOrder();
 }
 
 function clearProcessTable() {
     process_table.children[0].remove();
+}
+
+function changeProcessfile(file) {
+    path = file.target.value;
+    filename = path.replace(/^.*\\/, "");
+
+    process_cell = file.target.parentElement.parentElement.children[1].children[0];
+    process_cell.innerHTML=filename;
+
+    saveProcesses();
 }
 
 function initProcesses(processes) {
