@@ -5,7 +5,6 @@ from PIL import Image
 from backend.TrayWorker import TrayWorker
 #Interface
 from backend.Interface import Interface
-import eel
 
 class Tray():
     def __init__(self, Main, WallpaperChainger):
