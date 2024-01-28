@@ -75,7 +75,7 @@ class Interface():
         return result
     
     def open(self):
-        width = 624
+        width = 690
 
         basic_height = 500
         height = min(1280, basic_height + 44*len(self.tray.main.config['PROCESSES']))

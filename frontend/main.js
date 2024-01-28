@@ -48,7 +48,6 @@ function detach(element) {
   }
   
   function row(table, index) {
-    // Generic Version: return child(table.querySelector('tbody'), 'tr', index);
     return child(table.querySelector('tbody'), 'tr', index);
   }
   
@@ -69,7 +68,7 @@ async function saveProcesses() {
             {
                 id : row.children[0].children[0].value, 
                 name : row.children[1].children[0].innerHTML, 
-                wallpaper : row.children[3].children[0].innerHTML
+                wallpaper : row.children[3].children[0].children[0].innerHTML
             });
     }
 
@@ -114,9 +113,9 @@ function updateProcessIdForRows() {
         }
 
         //for delete button
-        row.children[4].dataset.process_id = new_process_id;
-        row.children[4].children[0].attributes.process_id.nodeValue = new_process_id;
-        row.children[4].children[0].id = "process_" + new_process_id;
+        row.children[5].dataset.process_id = new_process_id;
+        row.children[5].children[0].attributes.process_id.nodeValue = new_process_id;
+        row.children[5].children[0].id = "process_" + new_process_id;
     }
 }
 
@@ -190,13 +189,18 @@ function addProcess(name, wallpaper) {
 
     process_cell = new_row.insertCell(1);
     process_choice_cell = new_row.insertCell(2);
+
     wallpaper_cell = new_row.insertCell(3);
-    delete_cell = new_row.insertCell(4);
+    wallpaper_choice_cell = new_row.insertCell(4);
+    delete_cell = new_row.insertCell(5);
 
     process_cell.innerHTML = "<div class='input_item half-round'>" + name + "</div>";
-    process_choice_cell.innerHTML = "<button id='process_choice_" + (new_row_id+ 1) + "' class='custom-file-upload''>SET</button>";
-    wallpaper_cell.innerHTML = "<div class='input_item hundred'>" + wallpaper + "</div>";
-    delete_cell.innerHTML = "<div class='delete_process' id='delete_process_"+(new_row_id+ 1)+"' process_id='" + (new_row_id + 1) + "'></div>";
+    process_choice_cell.innerHTML = "<button id='process_choice_" + (new_row_id + 1) + "' class='custom-file-upload''>SET</button>";
+
+    wallpaper_cell.innerHTML = "<div class='input_item half-round hundred rtl' dir='RTL'><bdi id='process_wallpaper_" + (new_row_id + 1) + "' class='rtl'>"+ wallpaper + "</bdi></div>";
+    wallpaper_choice_cell.innerHTML = "<button id='wallpaper_choice_" + (new_row_id + 1) + "' class='custom-file-upload''>SET</button>";
+
+    delete_cell.innerHTML = "<div class='delete_process' id='delete_process_"+(new_row_id + 1)+"' process_id='" + (new_row_id + 1) + "'></div>";
 
     document.getElementById("delete_process_"+(new_row_id+ 1)).onclick = deleteProcess;
     document.getElementById("process_choice_"+(new_row_id+ 1)).onclick = changeProcessfile;
@@ -205,11 +209,17 @@ function addProcess(name, wallpaper) {
 }
 
 function clearProcessTable() {
-    process_table.children[0].remove();
+    if (process_table.children[0]) {
+        process_table.children[0].remove();
+    }
 }
 
 async function changeProcessfile(event) {
     file_path = await eel.getFileWithPath()();
+
+    if (file_path == '') {
+        return;
+    }
 
     file_with_path = file_path.replace(/^.*\\/, "");
 

@@ -301,4 +301,6 @@ input[type="file"] {
     margin-right: auto;
     overflow: hidden;
     text-overflow: ellipsis;
+    padding-bottom: 6px;
+    padding-top: 2px;
 }
