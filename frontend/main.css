@@ -3,7 +3,6 @@ body {
 }
 
 .button {
-    margin-top: 12px;
     border-radius: 6px;
     border: 0px;
     padding: 6px 12px;
@@ -76,6 +75,12 @@ h1 {
     margin-bottom: 4px;
 }
 
+h2 {
+    font-size: 16px;
+    margin-bottom: 0px;
+    margin-top: 16px;
+}
+
 .settings {
     display: flex;
     flex-direction: column;
@@ -95,7 +100,7 @@ h1 {
     font-size: 14px;
 }
 
-.process_item {
+.input_item {
     background-color: rgb(235, 235, 235);
     padding: 4px 8px;
     border-radius: 6px;
@@ -107,13 +112,18 @@ h1 {
     overflow: hidden;
 }
 
-.process_item.half-round {
+.input_item.half-round {
     border-radius: 6px 0px 0px 6px;
 }
 
-.process_item.hundred {
+.input_item.hundred {
     width: calc(100% - 16px);
     max-width: calc(100% - 16px);
+}
+
+.input_item.rtl {
+    margin-right: auto;
+    text-align: end;
 }
 
 select {
@@ -223,7 +233,7 @@ select {
     font-size: 12px;
     margin-bottom: 12px;
     color: #8b8b8b;
-    width: calc(100vw - 28px);
+    width: calc(100vw - 42px);
 }
 
 .modal {
@@ -268,4 +278,27 @@ input[type="file"] {
 
 .custom-file-upload:hover {
     background-color: rgb(187, 187, 187);
+}
+
+.default_loader {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    width: 100%;
+    margin-top: 12px;
+    column-gap: 12px;
+}
+
+.flex_row {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    max-width: 62%;
+}
+
+.rtl {
+    max-width: fit-content;
+    margin-right: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

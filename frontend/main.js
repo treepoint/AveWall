@@ -193,9 +193,9 @@ function addProcess(name, wallpaper) {
     wallpaper_cell = new_row.insertCell(3);
     delete_cell = new_row.insertCell(4);
 
-    process_cell.innerHTML = "<div class='process_item half-round'>" + name + "</div>";
+    process_cell.innerHTML = "<div class='input_item half-round'>" + name + "</div>";
     process_choice_cell.innerHTML = "<button id='process_choice_" + (new_row_id+ 1) + "' class='custom-file-upload''>SET</button>";
-    wallpaper_cell.innerHTML = "<div class='process_item hundred'>" + wallpaper + "</div>";
+    wallpaper_cell.innerHTML = "<div class='input_item hundred'>" + wallpaper + "</div>";
     delete_cell.innerHTML = "<div class='delete_process' id='delete_process_"+(new_row_id+ 1)+"' process_id='" + (new_row_id + 1) + "'></div>";
 
     document.getElementById("delete_process_"+(new_row_id+ 1)).onclick = deleteProcess;
@@ -221,6 +221,18 @@ async function changeProcessfile(event) {
     process_cell.innerHTML=file_name;
 
     saveProcesses();
+}
+
+async function changeDefaultWallpaper(event) {
+    file_path = await eel.getFileWithPath()();
+
+    file_with_path = file_path.replace(/^.*\\/, "");
+
+    document.getElementById("default_wallpaper").innerHTML=file_with_path;
+
+    await eel.changeDefaultWallpaper(file_with_path)();
+
+    showModal('Changes applied');
 }
 
 function initProcesses(processes) {
@@ -320,6 +332,9 @@ async function initConfig() {
 
     config = JSON.parse(config)
 
+    //Init default wallpaper
+    document.getElementById("default_wallpaper").innerHTML=config['MAIN']['default_wallpaper'];
+
     //Init Processes
     initProcesses(config['PROCESSES']);
 
@@ -329,8 +344,9 @@ async function initConfig() {
 }
 
 function setActions() {
-    //Autostart
+    //Settings
     document.getElementById('autostart').onchange = setAutostart;
+    document.getElementById('default_wallpaper_choice').onclick = changeDefaultWallpaper;
 
     //processes
     document.getElementById('plus').onclick = addNewProcess;

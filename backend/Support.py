@@ -13,7 +13,7 @@ class Support:
         self.main = Main
     
     def writeConfig(self, config):
-        with open(self.settings_file, 'w') as configfile:
+        with open(self.settings_file, 'w', encoding="utf-8") as configfile:
             config.write(configfile)
 
     def createDefaultConfigFile(self):
@@ -38,9 +38,9 @@ class Support:
         config = configparser.ConfigParser()
 
         #Проверяем, что файл в наличии
-        if len(config.read(self.settings_file)) != 1:
+        if len(config.read(self.settings_file, encoding='utf-8')) != 1:
             config = self.createDefaultConfigFile()
-            config = config.read(self.settings_file)
+            config = config.read(self.settings_file, encoding='utf-8')
 
         return config
 

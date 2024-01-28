@@ -13,7 +13,7 @@ class WallpaperChanger:
 
         self.current_state = None
 
-    def swapWallpapers(self):
+    def swapWallpapers(self, is_force = False):
         match self.main.config['MAIN']['mode']:
             case 'auto':
                 #Определяем есть ли указанные процессы
@@ -26,7 +26,7 @@ class WallpaperChanger:
             case 'default':
                 new_state = 'default'
 
-        if (new_state == self.current_state) and self.current_state is not None:
+        if ((new_state == self.current_state) and self.current_state is not None) and not is_force:
             return
 
         #Определяем обои
@@ -46,7 +46,6 @@ class WallpaperChanger:
     def setWallpaper(self, path):
         ctypes.windll.user32.SystemParametersInfoW(20, 0, os.path.abspath(path), 3)
 
-
     def generateBlackWallpaper(self):
         if not os.path.isfile(self.main.config['MAIN']['black_wallpaper']):
             image = Image.new('RGB', (1, 1), 'black')
@@ -55,7 +54,22 @@ class WallpaperChanger:
             image.save(self.main.config['MAIN']['black_wallpaper'])
 
     def getDefaultWindowsWallpaper(self, is_force = False):
+        print(self.main.config['MAIN']['default_wallpaper'])
+
         if (not os.path.isfile(self.main.config['MAIN']['default_wallpaper']) or is_force):
             current_wallpaper_location = os.path.join(os.getenv('APPDATA'), 'Microsoft', 'Windows', 'Themes', 'TranscodedWallpaper')
             
-            shutil.copy2(current_wallpaper_location, self.main.config['MAIN']['default_wallpaper'])  
+            shutil.copy2(current_wallpaper_location, './assets')
+
+            self.main.config['MAIN']['default_wallpaper'] = './assets/default.jpg'
+            self.main.support.writeConfig(self.main.config)
+
+        return
+
+    def changeDefaultWallpaper(self, path_with_file):
+        self.main.config['MAIN']['default_wallpaper'] = path_with_file
+        self.main.support.writeConfig(self.main.config)
+
+        self.swapWallpapers(True)
+
+        return

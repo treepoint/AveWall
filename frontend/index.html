@@ -14,6 +14,17 @@
                 <input type="checkbox" id="autostart" name="settings" value='false'/>
                 <label for="autostart">Autostart with windows</label>
             </div>
+            <h2>Default wallpaper</h2>
+            <div class="default_loader">
+                <div class="flex_row">
+                    <div class="input_item half-round hundred rtl" dir="RTL">
+                        <bdi id="default_wallpaper" class="rtl">
+                        </bdi>
+                    </div>
+                    <button id="default_wallpaper_choice" class="custom-file-upload">MANUAL SET</button>
+                </div>
+                <button id="set-wall-as-default" type="button" class="button">GET CURRENT AS DEFAULT</button>
+            </div>
         </div>
         <div class="processes">
             <h1>PROCESS LIST</h1>
@@ -41,7 +52,6 @@
         <div class="actions">
             <h1>ACTIONS</h1>
             <div class="actions_buttons">
-                <button id="set-wall-as-default" type="button" class="button">SET WINDOWS WALLPAPER AS DEFAULT</button>
                 <button id="reload-config" type="button" class="button">RELOAD CONFIG</button>
                 <button id="close" type="button" class="button">CLOSE WINDOW</button>
                 <button id="exit" type="button" class="button">EXIT APPLICATION</button>

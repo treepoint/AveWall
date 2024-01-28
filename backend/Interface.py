@@ -18,8 +18,9 @@ class Interface():
         eel._expose("getConfig", self.returnConfig)
         eel._expose("getState", self.returnState)
 
-        #Автостарт
+        #Настройки
         eel._expose("setAutostart", self.tray.setAutostart)
+        eel._expose("changeDefaultWallpaper", self.tray.wallpaperChainger.changeDefaultWallpaper)
 
         #Процессы
         eel._expose("saveProcesses", self.saveProcesses)
@@ -74,8 +75,8 @@ class Interface():
         return result
     
     def open(self):
-        width = 610
-        height = 710
+        width = 624
+        height = 760
         eel.start('index.html', 
                    mode=self.browserAndMode['mode'], 
                    size=(width, height), 
