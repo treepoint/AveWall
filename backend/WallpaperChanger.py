@@ -54,8 +54,6 @@ class WallpaperChanger:
             image.save(self.main.config['MAIN']['black_wallpaper'])
 
     def getDefaultWindowsWallpaper(self, is_force = False):
-        print(self.main.config['MAIN']['default_wallpaper'])
-
         if (not os.path.isfile(self.main.config['MAIN']['default_wallpaper']) or is_force):
             current_wallpaper_location = os.path.join(os.getenv('APPDATA'), 'Microsoft', 'Windows', 'Themes', 'TranscodedWallpaper')
             
