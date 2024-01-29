@@ -112,9 +112,17 @@ class Interface():
             
         self.tray.main.support.writeConfig(self.tray.main.config)
 
-    def getFileWithPath(self):
+    def getFileWithPath(self, type):
         root = Tk()
         root.withdraw()
         root.wm_attributes('-topmost', 1)
-        path = filedialog.askopenfilename()
-        return path
+
+        if type == 'image':
+            path = filedialog.askopenfilename(filetypes=[("Image File",'.jpg .png .jpeg')])
+            return path
+        
+        if type == 'exe':
+            path = filedialog.askopenfilename(filetypes=[("Applications", "*.exe")])
+            return path
+
+        return None

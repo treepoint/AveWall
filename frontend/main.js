@@ -194,16 +194,17 @@ function addProcess(name, wallpaper) {
     wallpaper_choice_cell = new_row.insertCell(4);
     delete_cell = new_row.insertCell(5);
 
-    process_cell.innerHTML = "<div class='input_item half-round'>" + name + "</div>";
+    process_cell.innerHTML = "<div class='input_item half-round half'>" + name + "</div>";
     process_choice_cell.innerHTML = "<button id='process_choice_" + (new_row_id + 1) + "' class='custom-file-upload''>SET</button>";
+    document.getElementById("process_choice_"+(new_row_id+ 1)).onclick = changeProcessfile;
 
-    wallpaper_cell.innerHTML = "<div class='input_item half-round hundred rtl' dir='RTL'><bdi id='process_wallpaper_" + (new_row_id + 1) + "' class='rtl'>"+ wallpaper + "</bdi></div>";
+    wallpaper_cell.innerHTML = "<div class='input_item half-round hundred rtl half' dir='RTL'><bdi id='process_wallpaper_" + (new_row_id + 1) + "' class='rtl'>"+ wallpaper + "</bdi></div>";
     wallpaper_choice_cell.innerHTML = "<button id='wallpaper_choice_" + (new_row_id + 1) + "' class='custom-file-upload''>SET</button>";
+    document.getElementById("wallpaper_choice_"+(new_row_id+ 1)).onclick = changeProcessWallpaper;
 
     delete_cell.innerHTML = "<div class='delete_process' id='delete_process_"+(new_row_id + 1)+"' process_id='" + (new_row_id + 1) + "'></div>";
 
     document.getElementById("delete_process_"+(new_row_id+ 1)).onclick = deleteProcess;
-    document.getElementById("process_choice_"+(new_row_id+ 1)).onclick = changeProcessfile;
 
     reOrder();
 }
@@ -215,7 +216,7 @@ function clearProcessTable() {
 }
 
 async function changeProcessfile(event) {
-    file_path = await eel.getFileWithPath()();
+    file_path = await eel.getFileWithPath('exe')();
 
     if (file_path == '') {
         return;
@@ -233,8 +234,27 @@ async function changeProcessfile(event) {
     saveProcesses();
 }
 
+async function changeProcessWallpaper(event) {
+    file_path = await eel.getFileWithPath('image')();
+
+    if (file_path == '') {
+        return;
+    }
+
+    file_with_path = file_path.replace(/^.*\\/, "");
+
+    wallpaper_cell = event.target.parentElement.parentElement.children[3].children[0].children[0];
+    wallpaper_cell.innerHTML=file_with_path;
+
+    saveProcesses();
+}
+
 async function changeDefaultWallpaper(event) {
-    file_path = await eel.getFileWithPath()();
+    file_path = await eel.getFileWithPath('image')();
+
+    if (file_path == '') {
+        return;
+    }
 
     file_with_path = file_path.replace(/^.*\\/, "");
 

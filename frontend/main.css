@@ -121,9 +121,17 @@ h2 {
     max-width: calc(100% - 16px);
 }
 
+.input_item.max_200 {
+    max-width: 200px;
+}
+
 .input_item.rtl {
     margin-right: auto;
     text-align: end;
+}
+
+.input_item.half {
+    width: calc((100vw / 2) - 120px);
 }
 
 select {
@@ -293,7 +301,7 @@ input[type="file"] {
     display: flex;
     flex-direction: row;
     width: 100%;
-    max-width: 62%;
+    max-width: calc(100vw - 246px);
 }
 
 .rtl {
