@@ -73,6 +73,7 @@ body {
 h1 {
     font-size: 24px;
     margin-bottom: 4px;
+    margin-top: 24px;
 }
 
 h2 {
@@ -98,6 +99,16 @@ h2 {
     text-align: left;
     max-width: calc(100vw - 35px);
     font-size: 14px;
+}
+
+.processes_header {
+    font-size: 12px;
+    border-bottom: 2px solid #d4d4d4;
+    border-radius: 6px;
+    padding: 0px 2px 4px 6px;
+    text-align: center;
+    font-weight: bold;
+    opacity: 0.4;
 }
 
 .input_item {
@@ -131,7 +142,12 @@ h2 {
 }
 
 .input_item.half {
-    width: calc((100vw / 2) - 120px);
+    width: calc((100vw / 2) - 172px);
+}
+
+.input_item.reasonable_full {
+    width: calc(100vw - 281px);
+    max-width: calc(100vw - 281px);
 }
 
 select {
@@ -311,4 +327,8 @@ input[type="file"] {
     text-overflow: ellipsis;
     padding-bottom: 6px;
     padding-top: 2px;
+}
+
+.invisible {
+    display: none;
 }

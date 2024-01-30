@@ -20,19 +20,19 @@ class WallpaperChanger:
                 new_state = self.main.support.checkThatTargetProcessesRunning(self.main.config.items('PROCESSES'))
 
                 if not new_state:
-                    new_state = 'default'
+                    new_state = 'DEFAULT'
             case 'black':
-                new_state = 'black'
+                new_state = 'BLACK'
             case 'default':
-                new_state = 'default'
+                new_state = 'DEFAULT'
 
         if ((new_state == self.current_state) and self.current_state is not None) and not is_force:
             return
 
         #Определяем обои
-        if new_state == 'black' and new_state != self.current_state:
+        if new_state == 'BLACK' and new_state != self.current_state:
             wallpaper = self.main.config['MAIN']['black_wallpaper']
-        elif new_state == 'default':
+        elif new_state == 'DEFAULT':
             wallpaper = self.main.config['MAIN']['default_wallpaper']
         else:
             wallpaper = new_state

@@ -57,7 +57,11 @@ class Support:
             process = process[1].split(',')
 
             if str(process[0]).lower() in running_processes:
-                return process[1]
+                if process[1] == 'CUSTOM':
+                    return process[2]
+                
+                else:
+                    return process[1]
             
             #И небольшая пауза между этим всем, чтобы не было пиковой нагрузки
             time.sleep(0.01)

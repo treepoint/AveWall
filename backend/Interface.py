@@ -75,9 +75,9 @@ class Interface():
         return result
     
     def open(self):
-        width = 690
+        width = 694
 
-        basic_height = 500
+        basic_height = 550
         height = min(1280, basic_height + 44*len(self.tray.main.config['PROCESSES']))
 
         eel.start('index.html', 
@@ -106,8 +106,8 @@ class Interface():
         processes = {}
 
         for process in processes_json['items']:
-            processes[process['id']] = f'{process['name']}, {process['wallpaper']}'
-        
+            processes[process['id']] = f'{process['name']}, {process['type']}, {process['wallpaper']}'
+
         self.tray.main.config['PROCESSES'] = processes
             
         self.tray.main.support.writeConfig(self.tray.main.config)

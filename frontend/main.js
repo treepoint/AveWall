@@ -60,21 +60,91 @@ function detach(element) {
 ***************************************************/
 process_table = document.getElementById("process_table");
 
+function changeWallpaperRowVisibility() {
+    //Скрываем столбец с wallpaper если там ничего нету больше
+    i = 0;
+
+    for (let row of process_table.rows) {
+        if (i == 0) {
+            i += 1;
+            continue;
+        }
+
+        type = row.children[3].children[0].value;
+
+        if (type == 'CUSTOM') {
+            document.getElementById("wallpaper_header").classList.remove("invisible");
+
+            for (let row of process_table.rows) {
+                row.children[1].children[0].classList.add("half");
+                row.children[1].children[0].classList.remove("reasonable_full");
+            }
+
+            return;
+        }
+
+        i += 1;
+    }
+
+    document.getElementById("wallpaper_header").classList.add("invisible");
+
+    for (let row of process_table.rows) {
+        row.children[1].children[0].classList.remove("half");
+        row.children[1].children[0].classList.add("reasonable_full");
+    }
+}
+
 async function saveProcesses() {
     processes = { items : [] };
 
+    i = 0;
+
+    //Проверяем целостность
     for (let row of process_table.rows) {
+        if (i == 0) {
+            i += 1;
+            continue;
+        }
+
+        process_name = row.children[1].children[0].innerHTML.replace(" ", "");
+
+        if (process_name == "") {
+            return;
+        }
+
+        type = row.children[3].children[0].value;
+        wallpaper = row.children[4].children[0].children[0].innerHTML.replace(" ", "");
+        if (type == 'CUSTOM' && wallpaper == "") {
+            return;
+        }
+
+        i += 1;
+    }
+
+
+    //Сохраняем
+    i = 0;
+
+    for (let row of process_table.rows) {
+        if (i == 0) {
+            i += 1;
+            continue;
+        }
+
         processes.items.push(
             {
                 id : row.children[0].children[0].value, 
                 name : row.children[1].children[0].innerHTML, 
-                wallpaper : row.children[3].children[0].children[0].innerHTML
+                type : row.children[3].children[0].value,
+                wallpaper : row.children[4].children[0].children[0].innerHTML
             });
+
+        i += 1;
     }
 
     await eel.saveProcesses(processes)();
 
-    showModal('Changes applied');
+    showModal('Processes saved');
 }
 
 function deleteProcess(event) {
@@ -90,7 +160,7 @@ function deleteProcess(event) {
 }
 
 function addNewProcess() {
-    addProcess('', '');
+    addProcess('', 'DEFAULT' ,'');
 }
 
 function updateProcessIdForRows() {
@@ -113,9 +183,9 @@ function updateProcessIdForRows() {
         }
 
         //for delete button
-        row.children[5].dataset.process_id = new_process_id;
-        row.children[5].children[0].attributes.process_id.nodeValue = new_process_id;
-        row.children[5].children[0].id = "process_" + new_process_id;
+        row.children[6].dataset.process_id = new_process_id;
+        row.children[6].children[0].attributes.process_id.nodeValue = new_process_id;
+        row.children[6].children[0].id = "process_" + new_process_id;
     }
 }
 
@@ -133,7 +203,7 @@ function onOrderChange(select) {
         isBefore = true;
     }
 
-    moveRow(process_table, current_index, new_index, isBefore);
+    moveRow(process_table, current_index + 1, new_index + 1, isBefore);
 
     //Меняем все ID на новые
     updateProcessIdForRows();
@@ -144,6 +214,26 @@ function onOrderChange(select) {
     }
 
     saveProcesses();
+}
+
+function onTypeChange(select) {
+
+    current_type = select.options[select.selectedIndex].value;
+
+    if (current_type == 'CUSTOM') {
+        row_id = select.parentElement.parentElement.dataset.process_id;
+
+        select.parentElement.parentElement.children[4].innerHTML = "<div class='input_item half-round hundred rtl half' dir='RTL'><bdi id='process_wallpaper_" + row_id + "' class='rtl'></bdi></div>";
+        select.parentElement.parentElement.children[5].innerHTML = "<button id='wallpaper_choice_" + row_id + "' class='custom-file-upload''>SET</button>";
+        document.getElementById("wallpaper_choice_" + row_id).onclick = changeProcessWallpaper;
+    } else {
+        select.parentElement.parentElement.children[4].innerHTML = "<div class='invisible'><bdi> </bdi></div>";
+        select.parentElement.parentElement.children[5].innerHTML = " ";
+    }
+
+    saveProcesses();
+
+    changeWallpaperRowVisibility();
 }
 
 function reOrder() {
@@ -175,36 +265,57 @@ function reOrder() {
     }
 }
 
-function addProcess(name, wallpaper) {
+function addProcess(name, current_type, wallpaper) {
     new_row_id = process_table.rows.length;
 
     new_row = process_table.insertRow(new_row_id);
-    new_row.id = "process_" + (new_row_id + 1);
-    new_row.dataset.process_id = new_row_id + 1;
+    new_row.id = "process_" + (new_row_id);
+    new_row.dataset.process_id = new_row_id;
     new_row.classList.add("process_rows");
 
     order_cell = new_row.insertCell(0);
     order_cell.classList.add("order_cell");
-    order_cell.dataset.process_id = new_row_id + 1;
+    order_cell.dataset.process_id = new_row_id;
 
     process_cell = new_row.insertCell(1);
     process_choice_cell = new_row.insertCell(2);
-
-    wallpaper_cell = new_row.insertCell(3);
-    wallpaper_choice_cell = new_row.insertCell(4);
-    delete_cell = new_row.insertCell(5);
+    type_cell = new_row.insertCell(3);
+    wallpaper_cell = new_row.insertCell(4);
+    wallpaper_choice_cell = new_row.insertCell(5);
+    delete_cell = new_row.insertCell(6);
 
     process_cell.innerHTML = "<div class='input_item half-round half'>" + name + "</div>";
-    process_choice_cell.innerHTML = "<button id='process_choice_" + (new_row_id + 1) + "' class='custom-file-upload''>SET</button>";
-    document.getElementById("process_choice_"+(new_row_id+ 1)).onclick = changeProcessfile;
+    process_choice_cell.innerHTML = "<button id='process_choice_" + new_row_id + "' class='custom-file-upload''>SET</button>";
+    document.getElementById("process_choice_" + new_row_id).onclick = changeProcessfile;
 
-    wallpaper_cell.innerHTML = "<div class='input_item half-round hundred rtl half' dir='RTL'><bdi id='process_wallpaper_" + (new_row_id + 1) + "' class='rtl'>"+ wallpaper + "</bdi></div>";
-    wallpaper_choice_cell.innerHTML = "<button id='wallpaper_choice_" + (new_row_id + 1) + "' class='custom-file-upload''>SET</button>";
-    document.getElementById("wallpaper_choice_"+(new_row_id+ 1)).onclick = changeProcessWallpaper;
+    types = ["CUSTOM", "BLACK", "DEFAULT"]
 
-    delete_cell.innerHTML = "<div class='delete_process' id='delete_process_"+(new_row_id + 1)+"' process_id='" + (new_row_id + 1) + "'></div>";
+    type_select = "<select onchange='onTypeChange(this)'>";
+    for (type of types) {
+        if (type != current_type) {
+            type_select += "<option>" + type + "</option>";
+        } else {
+            type_select += "<option selected>" + type + "</option>";
+        }
+    }
+    type_select += "</select>";
+ 
+    type_cell.innerHTML = type_select;
+    type_cell.dataset.process_id = new_row_id;
+    type_cell.dataset.value = new_row_id;
 
-    document.getElementById("delete_process_"+(new_row_id+ 1)).onclick = deleteProcess;
+    if (current_type == "CUSTOM") {
+        wallpaper_cell.innerHTML = "<div class='input_item half-round hundred rtl half' dir='RTL'><bdi id='process_wallpaper_" + new_row_id + "' class='rtl'>"+ wallpaper + "</bdi></div>";
+        wallpaper_choice_cell.innerHTML = "<button id='wallpaper_choice_" + new_row_id + "' class='custom-file-upload''>SET</button>";
+        document.getElementById("wallpaper_choice_" + new_row_id).onclick = changeProcessWallpaper;
+    } else {
+        wallpaper_cell.innerHTML = "<div class='invisible'><bdi> </bdi></div>";
+        wallpaper_choice_cell.innerHTML = " ";
+    }
+    
+    delete_cell.innerHTML = "<div class='delete_process' id='delete_process_" + new_row_id + "' process_id='" + new_row_id + "'></div>";
+
+    document.getElementById("delete_process_" + new_row_id).onclick = deleteProcess;
 
     reOrder();
 }
@@ -243,7 +354,7 @@ async function changeProcessWallpaper(event) {
 
     file_with_path = file_path.replace(/^.*\\/, "");
 
-    wallpaper_cell = event.target.parentElement.parentElement.children[3].children[0].children[0];
+    wallpaper_cell = event.target.parentElement.parentElement.children[4].children[0].children[0];
     wallpaper_cell.innerHTML=file_with_path;
 
     saveProcesses();
@@ -266,11 +377,33 @@ async function changeDefaultWallpaper(event) {
 }
 
 function initProcesses(processes) {
-    for (let process of Object.values(processes)) {
-        split_process = process.split(", ");
 
-        addProcess(split_process[0], split_process[1]);
+    header = process_table.insertRow(0);
+
+    order_th = header.insertCell(0);
+    process_th = header.insertCell(1);
+    process_th.innerHTML = "<div class='processes_header'>process</div>";
+
+    process_set_th = header.insertCell(2);
+    type_th = header.insertCell(3);
+    type_th.innerHTML = "<div class='processes_header'>mode</div>";
+
+    wallpaper_th = header.insertCell(4);
+    wallpaper_th.id = 'wallpaper_header'
+    wallpaper_th.innerHTML = "<div class='processes_header'>wallpaper</div>";
+    wallpaper_set_th = header.insertCell(5);
+    delete_th = header.insertCell(6);
+
+    for (let process of Object.values(processes)) {
+        split_process = process.split(",");
+
+        addProcess(
+            split_process[0].replace(" ", ""), 
+            split_process[1].replace(" ", ""),  
+            split_process[2].replace(" ", ""));
     }
+
+    changeWallpaperRowVisibility();
 }
 
 /**************************************************
