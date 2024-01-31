@@ -6,6 +6,8 @@ import configparser
 import psutil
 #sleep
 import time
+#system language
+import locale
 
 class Support:
     def __init__(self, setting_file, Main):
@@ -23,7 +25,8 @@ class Support:
             'black_wallpaper' : './assets/black.jpg',
             'default_wallpaper' : './assets/default.jpg',
             'polling_timeout' : 1,
-            'mode' : 'auto' 
+            'mode' : 'auto',
+            'local' : self.getCurrentSystemLanguage()
         }
 
         config['PROCESSES'] = {
@@ -89,3 +92,11 @@ class Support:
             '_MEIPASS',
             os.path.dirname(os.path.abspath(__file__)))
         return os.path.join(base_path, relative_path)
+    
+    def getCurrentSystemLanguage():
+        loc = locale.getdefaultlocale()[0]
+
+        if 'ru' in loc:
+            return 'RU'
+        else:
+            return 'EN'
