@@ -526,6 +526,7 @@ function setRussian() {
         document.getElementById("close").innerHTML = "ЗАКРЫТЬ ОКНО";
         document.getElementById("exit").innerHTML = "ЗАКРЫТЬ ПРИЛОЖЕНИЕ";
 
+    //Выбор типа обоев в таблице
     i = 0;
     for (let row of process_table.rows) {
         if (i == 0) {
@@ -548,6 +549,13 @@ function setRussian() {
         }
 
         i += 1;
+    }
+
+    //Кнопки в таблице
+    let set_buttons = document.getElementsByClassName("custom-file-upload");
+
+    for (button of set_buttons) {
+        button.innerHTML = "ВЫБРАТЬ";
     }
 }
 
@@ -576,6 +584,7 @@ function setEnglish() {
         document.getElementById("close").innerHTML = "CLOSE WINDOW";
         document.getElementById("exit").innerHTML = "EXIT APPLICATION";
 
+    //Выбор типа обоев в таблице
     i = 0;
     for (let row of process_table.rows) {
         if (i == 0) {
@@ -598,6 +607,13 @@ function setEnglish() {
         }
 
         i += 1;
+    }
+
+    //Кнопки в таблице
+    let set_buttons = document.getElementsByClassName("custom-file-upload");
+
+    for (button of set_buttons) {
+        button.innerHTML = "SET";
     }
 }
 
