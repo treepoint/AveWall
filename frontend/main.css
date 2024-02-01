@@ -78,7 +78,7 @@ h1 {
 
 h2 {
     font-size: 16px;
-    margin-bottom: 0px;
+    margin-bottom: 8px;
     margin-top: 16px;
 }
 
@@ -110,6 +110,7 @@ h2 {
     font-weight: bold;
     opacity: 0.4;
 }
+
 
 .input_item {
     background-color: rgb(235, 235, 235);
@@ -309,7 +310,6 @@ input[type="file"] {
     flex-wrap: nowrap;
     flex-direction: row;
     width: 100%;
-    margin-top: 12px;
     column-gap: 12px;
 }
 
@@ -318,6 +318,7 @@ input[type="file"] {
     flex-direction: row;
     width: 100%;
     max-width: calc(100vw - 246px);
+    overflow: auto;
 }
 
 .rtl {
@@ -331,4 +332,8 @@ input[type="file"] {
 
 .invisible {
     display: none;
+}
+
+.language_changer {
+    width: 200px;
 }

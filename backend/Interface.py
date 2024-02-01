@@ -20,6 +20,7 @@ class Interface():
 
         #Настройки
         eel._expose("setAutostart", self.tray.setAutostart)
+        eel._expose("changeLanguage", self.tray.changeLanguage)
         eel._expose("changeDefaultWallpaper", self.tray.wallpaperChainger.changeDefaultWallpaper)
 
         #Процессы

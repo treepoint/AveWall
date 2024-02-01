@@ -224,7 +224,7 @@ function onTypeChange(select) {
         row_id = select.parentElement.parentElement.dataset.process_id;
 
         select.parentElement.parentElement.children[4].innerHTML = "<div class='input_item half-round hundred rtl half' dir='RTL'><bdi id='process_wallpaper_" + row_id + "' class='rtl'></bdi></div>";
-        select.parentElement.parentElement.children[5].innerHTML = "<button id='wallpaper_choice_" + row_id + "' class='custom-file-upload''>SET</button>";
+        select.parentElement.parentElement.children[5].innerHTML = "<button id='wallpaper_choice_" + row_id + "' class='custom-file-upload''>ВЫБРАТЬ</button>";
         document.getElementById("wallpaper_choice_" + row_id).onclick = changeProcessWallpaper;
     } else {
         select.parentElement.parentElement.children[4].innerHTML = "<div class='invisible'><bdi> </bdi></div>";
@@ -285,7 +285,7 @@ function addProcess(name, current_type, wallpaper) {
     delete_cell = new_row.insertCell(6);
 
     process_cell.innerHTML = "<div class='input_item half-round half'>" + name + "</div>";
-    process_choice_cell.innerHTML = "<button id='process_choice_" + new_row_id + "' class='custom-file-upload''>SET</button>";
+    process_choice_cell.innerHTML = "<button id='process_choice_" + new_row_id + "' class='custom-file-upload''>ВЫБРАТЬ</button>";
     document.getElementById("process_choice_" + new_row_id).onclick = changeProcessfile;
 
     types = ["CUSTOM", "BLACK", "DEFAULT"]
@@ -293,9 +293,9 @@ function addProcess(name, current_type, wallpaper) {
     type_select = "<select onchange='onTypeChange(this)'>";
     for (type of types) {
         if (type != current_type) {
-            type_select += "<option>" + type + "</option>";
+            type_select += "<option id='option_process_type_" + type + "_" + new_row_id + "' value='" + type + "'>" + type + "</option>";
         } else {
-            type_select += "<option selected>" + type + "</option>";
+            type_select += "<option id='option_process_type_" + type + "_" + new_row_id + "' value='" + type + "' selected>" + type + "</option>";
         }
     }
     type_select += "</select>";
@@ -306,7 +306,7 @@ function addProcess(name, current_type, wallpaper) {
 
     if (current_type == "CUSTOM") {
         wallpaper_cell.innerHTML = "<div class='input_item half-round hundred rtl half' dir='RTL'><bdi id='process_wallpaper_" + new_row_id + "' class='rtl'>"+ wallpaper + "</bdi></div>";
-        wallpaper_choice_cell.innerHTML = "<button id='wallpaper_choice_" + new_row_id + "' class='custom-file-upload''>SET</button>";
+        wallpaper_choice_cell.innerHTML = "<button id='wallpaper_choice_" + new_row_id + "' class='custom-file-upload''>ВЫБРАТЬ</button>";
         document.getElementById("wallpaper_choice_" + new_row_id).onclick = changeProcessWallpaper;
     } else {
         wallpaper_cell.innerHTML = "<div class='invisible'><bdi> </bdi></div>";
@@ -382,15 +382,15 @@ function initProcesses(processes) {
 
     order_th = header.insertCell(0);
     process_th = header.insertCell(1);
-    process_th.innerHTML = "<div class='processes_header'>process</div>";
+    process_th.innerHTML = "<div id='processes_header_process' class='processes_header'>process</div>";
 
     process_set_th = header.insertCell(2);
     type_th = header.insertCell(3);
-    type_th.innerHTML = "<div class='processes_header'>mode</div>";
+    type_th.innerHTML = "<div id='processes_header_mode' class='processes_header'>mode</div>";
 
     wallpaper_th = header.insertCell(4);
     wallpaper_th.id = 'wallpaper_header'
-    wallpaper_th.innerHTML = "<div class='processes_header'>wallpaper</div>";
+    wallpaper_th.innerHTML = "<div id='processes_header_wallpaper' class='processes_header'>wallpaper</div>";
     wallpaper_set_th = header.insertCell(5);
     delete_th = header.insertCell(6);
 
@@ -480,6 +480,128 @@ async function onExit() {
 }
 
 /**************************************************
+* LOCALES
+***************************************************/
+
+async function onLanguageChange(select) {
+    locale = select.options[select.selectedIndex].value;
+    await eel.changeLanguage(locale)();
+    setLocale(locale);
+}
+
+function setLocale(locale) {
+    if (locale == "RU" ) {
+        setRussian();
+        document.getElementById("language_changer").value="RU";
+
+    } else {
+        setEnglish();
+        document.getElementById("language_changer").value="EN";
+    }
+}
+
+
+function setRussian() {
+    document.getElementById("h1_settings").innerHTML = "НАСТРОЙКИ";
+        document.getElementById("autostart_label").innerHTML = "Запускать вместе с Windows";
+        document.getElementById("h2_language").innerHTML = "Язык";
+        document.getElementById("h2_default_wallpaper").innerHTML = "Обои по умолчанию";
+        document.getElementById("default_wallpaper_choice").innerHTML = "ВЫБРАТЬ";
+        document.getElementById("set-wall-as-default").innerHTML = "УСТАНОВИТЬ ТЕКУЩИЕ ПО УМОЛЧАНИЮ";
+
+    document.getElementById("h1_processes").innerHTML = "СПИСОК ПРОЦЕССОВ";
+        document.getElementById("processes_hint").innerHTML = "Расположите процессы в порядке их важности. Например, если вы хотите, чтобы обои Outlook имели более высокий приоритет чем Filezilla, то поставьте Outlook приоритет 1, а Filezilla — приоритет 2.";
+        document.getElementById("processes_header_process").innerHTML = "процесс";
+        document.getElementById("processes_header_mode").innerHTML = "режим";
+        document.getElementById("processes_header_wallpaper").innerHTML = "обои";
+
+    document.getElementById("h1_mode").innerHTML = "РЕЖИМЫ";
+        document.getElementById("mode_hint").innerHTML = "Автоматический — AveWall будет работать по как указано в списке процессов. По умолчанию — принудительная установка обоев по умолчанию. Чернй экран — принудительная установка черных обоев.";
+        document.getElementById("set-auto").innerHTML = "АВТОМАТИЧЕСКИЙ";
+        document.getElementById("set-default").innerHTML = "ОБОИ ПО УМОЛЧАНИЮ";
+        document.getElementById("set-black").innerHTML = "ЧЕРНЫЙ ЭКРАН";
+
+    document.getElementById("h1_actions").innerHTML = "ДЕЙСТВИЯ";
+        document.getElementById("reload-config").innerHTML = "ПЕРЕЗАГРУЗИТЬ КОНФИГ";
+        document.getElementById("close").innerHTML = "ЗАКРЫТЬ ОКНО";
+        document.getElementById("exit").innerHTML = "ЗАКРЫТЬ ПРИЛОЖЕНИЕ";
+
+    i = 0;
+    for (let row of process_table.rows) {
+        if (i == 0) {
+            i += 1;
+            continue;
+        }
+
+        for (let option of row.children[3].children[0]) {                
+            switch (option.value) {
+                case 'CUSTOM':
+                    option.innerHTML = 'СВОИ';
+                    break;
+                case 'DEFAULT':
+                    option.innerHTML = 'ПО УМОЛЧАНИЮ';
+                    break;
+                case 'BLACK':
+                    option.innerHTML = 'ЧЕРНЫЙ ЭКРАН';
+                    break;
+            }
+        }
+
+        i += 1;
+    }
+}
+
+function setEnglish() {
+    document.getElementById("h1_settings").innerHTML = "SETTINGS";
+        document.getElementById("autostart_label").innerHTML = "Autostart with windows";
+        document.getElementById("h2_language").innerHTML = "Language";
+        document.getElementById("h2_default_wallpaper").innerHTML = "Default wallpaper";
+        document.getElementById("default_wallpaper_choice").innerHTML = "MANUAL SET";
+        document.getElementById("set-wall-as-default").innerHTML = "GET CURRENT AS DEFAULT";
+
+    document.getElementById("h1_processes").innerHTML = "PROCESS LIST";
+        document.getElementById("processes_hint").innerHTML = "Arrange the processes in order of importance. For example, if you want the Outlook wallpaper to have a higher priority than Filezilla, put Outlook priority 1 and Filezilla priority 2.";
+        document.getElementById("processes_header_process").innerHTML = "process";
+        document.getElementById("processes_header_mode").innerHTML = "mode";
+        document.getElementById("processes_header_wallpaper").innerHTML = "wallpaper";
+
+    document.getElementById("h1_mode").innerHTML = "MODE";
+        document.getElementById("mode_hint").innerHTML = "Auto — AveWall will work by process list. Default — forced set up default wallpaper. Black — forced black wallpaper.";
+        document.getElementById("set-auto").innerHTML = "AUTO";
+        document.getElementById("set-default").innerHTML = "DEFAULT";
+        document.getElementById("set-black").innerHTML = "BLACK";
+
+    document.getElementById("h1_actions").innerHTML = "ACTIONS";
+        document.getElementById("reload-config").innerHTML = "RELOAD CONFIG";
+        document.getElementById("close").innerHTML = "CLOSE WINDOW";
+        document.getElementById("exit").innerHTML = "EXIT APPLICATION";
+
+    i = 0;
+    for (let row of process_table.rows) {
+        if (i == 0) {
+            i += 1;
+            continue;
+        }
+
+        for (let option of row.children[3].children[0]) {
+            switch (option.value) {
+                case 'CUSTOM':
+                    option.innerHTML = 'CUSTOM';
+                    break;
+                case 'DEFAULT':
+                    option.innerHTML = 'DEFAULT';
+                    break;
+                case 'BLACK':
+                    option.innerHTML = 'BLACK';
+                    break;
+            }
+        }
+
+        i += 1;
+    }
+}
+
+/**************************************************
 * INIT
 ***************************************************/
 async function initState() {
@@ -504,6 +626,10 @@ async function initConfig() {
     //Init MODS
     mode = config['MAIN']['mode'];
     setMode(mode)
+
+    //Init locale
+    locale = config['MAIN']['locale'];
+    setLocale(locale);
 }
 
 function setActions() {

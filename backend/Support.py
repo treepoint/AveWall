@@ -26,7 +26,7 @@ class Support:
             'default_wallpaper' : './assets/default.jpg',
             'polling_timeout' : 1,
             'mode' : 'auto',
-            'local' : self.getCurrentSystemLanguage()
+            'locale' : self.getCurrentSystemLanguage()
         }
 
         config['PROCESSES'] = {
@@ -94,9 +94,9 @@ class Support:
         return os.path.join(base_path, relative_path)
     
     def getCurrentSystemLanguage():
-        loc = locale.getdefaultlocale()[0]
+        locale = locale.getdefaultlocale()[0]
 
-        if 'ru' in loc:
+        if 'ru' in locale:
             return 'RU'
         else:
             return 'EN'
