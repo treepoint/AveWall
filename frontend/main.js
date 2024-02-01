@@ -161,6 +161,10 @@ function deleteProcess(event) {
 
 function addNewProcess() {
     addProcess('', 'DEFAULT' ,'');
+
+    //Лайфхак, ага. Добавили процесс — обновили локализацию. 
+    //Да, костыль, но и у нас тут MVP. Быстродействие в интерфейсе нас особо не интересует
+    setLocale(locale);
 }
 
 function updateProcessIdForRows() {
@@ -284,7 +288,7 @@ function addProcess(name, current_type, wallpaper) {
     wallpaper_choice_cell = new_row.insertCell(5);
     delete_cell = new_row.insertCell(6);
 
-    process_cell.innerHTML = "<div class='input_item half-round half'>" + name + "</div>";
+    process_cell.innerHTML = "<div class='input_item half-round reasonable_full'>" + name + "</div>";
     process_choice_cell.innerHTML = "<button id='process_choice_" + new_row_id + "' class='custom-file-upload''>ВЫБРАТЬ</button>";
     document.getElementById("process_choice_" + new_row_id).onclick = changeProcessfile;
 
@@ -482,6 +486,8 @@ async function onExit() {
 /**************************************************
 * LOCALES
 ***************************************************/
+
+locale = "EN";
 
 async function onLanguageChange(select) {
     locale = select.options[select.selectedIndex].value;
