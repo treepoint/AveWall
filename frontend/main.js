@@ -1,4 +1,11 @@
 /**************************************************
+ * GLOBAL VARIABLES
+ *************************************************/
+process_table = document.getElementById("process_table");
+process_table_shrinked = false;
+locale = "EN";
+
+/**************************************************
 * Autostart
 ***************************************************/
 async function setAutostart() {
@@ -33,33 +40,100 @@ function showModal(content) {
 ***************************************************/
 function detach(element) {
     return element.parentElement.removeChild(element);
-  }
-  
-  function move(src, dest, isBefore) {
+}
+
+function move(src, dest, isBefore) {
     dest.insertAdjacentElement(isBefore ? 'beforebegin' : 'afterend', detach(src));
-  }
-  
-  function children(element, selector) {
+}
+
+function children(element, selector) {
     return element.querySelectorAll(selector);
-  }
-  
-  function child(element, selector, index) {
+}
+
+function child(element, selector, index) {
     return children(element, selector)[index];
-  }
-  
-  function row(table, index) {
+}
+
+function row(table, index) {
     return child(table.querySelector('tbody'), 'tr', index);
-  }
-  
-  function moveRow(table, fromIndex, toIndex, isBefore) {
+}
+
+function moveRow(table, fromIndex, toIndex, isBefore) {
     move(row(table, fromIndex), row(table, toIndex), isBefore);
-  }
+}
+
+function setProcessTableShrinked() {
+    process_table_shrinked = true;
+
+    i = 0;
+
+    for (let row of process_table.rows) {
+        if (i == 0) {
+            i += 1;
+            continue;
+        }
+
+        type = row.children[3].children[0].value;
+
+        if (type == 'CUSTOM') {
+            process_table_shrinked = false;
+            return;
+        }
+
+        i += 1;
+    }
+}
+
+function reSizeProcessTable() {
+    setProcessTableShrinked();
+
+    table = process_table;
+    window_width = window.innerWidth;
+
+    //Вычтем статичные вещи
+    order_cell_width = 44;
+    delete_button_width = 46;
+    paddings = 8 + 8 + 56;
+
+    free_width = window_width - order_cell_width - delete_button_width - paddings;
+
+    //Вычтем кнопки SET
+    if (locale == 'EN') {
+        set_width = 52;
+        mode_width = 82;
+    } else {
+        set_width = 88;
+        mode_width = 134;
+    }
+
+    //У неуменьшенной версии таблицы кнопок таких две
+    if (process_table_shrinked) {
+        free_width = free_width - set_width - mode_width;
+    } else {
+        free_width = free_width - mode_width - (set_width * 2) - 8;
+    }
+
+    for (process_cell of document.getElementsByClassName("process_cell")) {
+        if (process_table_shrinked) { 
+            process_cell.style.width = free_width + "px";
+        } else {
+            process_cell.style.width = free_width/2  + "px";
+        }
+    }
+
+    for (wallpaper_cell of document.getElementsByClassName("wallpaper_cell")) {
+        if (process_table_shrinked) { 
+            wallpaper_cell.style.width = free_width + "px";
+        } else {
+            wallpaper_cell.style.width = free_width/2  + "px";
+        }
+    }
+
+}
 
 /**************************************************
 * Processes
 ***************************************************/
-process_table = document.getElementById("process_table");
-
 function changeWallpaperRowVisibility() {
     //Скрываем столбец с wallpaper если там ничего нету больше
     i = 0;
@@ -154,9 +228,10 @@ function deleteProcess(event) {
     //Меняем все ID на новые
     updateProcessIdForRows();
 
-    reOrder();
-    
+    reOrder();    
     saveProcesses();
+    reSizeProcessTable();
+    changeWallpaperRowVisibility();
 }
 
 function addNewProcess() {
@@ -221,22 +296,24 @@ function onOrderChange(select) {
 }
 
 function onTypeChange(select) {
-
     current_type = select.options[select.selectedIndex].value;
 
     if (current_type == 'CUSTOM') {
         row_id = select.parentElement.parentElement.dataset.process_id;
 
-        select.parentElement.parentElement.children[4].innerHTML = "<div class='input_item half-round hundred rtl half' dir='RTL'><bdi id='process_wallpaper_" + row_id + "' class='rtl'></bdi></div>";
+        select.parentElement.parentElement.children[4].innerHTML = "<div class='input_item wallpaper_cell half-round hundred rtl half' dir='RTL'><bdi id='process_wallpaper_" + row_id + "' class='rtl'></bdi></div>";
         select.parentElement.parentElement.children[5].innerHTML = "<button id='wallpaper_choice_" + row_id + "' class='custom-file-upload''>ВЫБРАТЬ</button>";
         document.getElementById("wallpaper_choice_" + row_id).onclick = changeProcessWallpaper;
+        process_table_shrinked = false;
     } else {
         select.parentElement.parentElement.children[4].innerHTML = "<div class='invisible'><bdi> </bdi></div>";
         select.parentElement.parentElement.children[5].innerHTML = " ";
+        process_table_shrinked = true;
     }
 
+    setLocale(locale);
+    reSizeProcessTable();
     saveProcesses();
-
     changeWallpaperRowVisibility();
 }
 
@@ -288,7 +365,7 @@ function addProcess(name, current_type, wallpaper) {
     wallpaper_choice_cell = new_row.insertCell(5);
     delete_cell = new_row.insertCell(6);
 
-    process_cell.innerHTML = "<div class='input_item half-round reasonable_full'>" + name + "</div>";
+    process_cell.innerHTML = "<div class='input_item process_cell half-round'>" + name + "</div>";
     process_choice_cell.innerHTML = "<button id='process_choice_" + new_row_id + "' class='custom-file-upload''>ВЫБРАТЬ</button>";
     document.getElementById("process_choice_" + new_row_id).onclick = changeProcessfile;
 
@@ -309,7 +386,7 @@ function addProcess(name, current_type, wallpaper) {
     type_cell.dataset.value = new_row_id;
 
     if (current_type == "CUSTOM") {
-        wallpaper_cell.innerHTML = "<div class='input_item half-round hundred rtl half' dir='RTL'><bdi id='process_wallpaper_" + new_row_id + "' class='rtl'>"+ wallpaper + "</bdi></div>";
+        wallpaper_cell.innerHTML = "<div class='input_item wallpaper_cell half-round hundred rtl half' dir='RTL'><bdi id='process_wallpaper_" + new_row_id + "' class='rtl'>"+ wallpaper + "</bdi></div>";
         wallpaper_choice_cell.innerHTML = "<button id='wallpaper_choice_" + new_row_id + "' class='custom-file-upload''>ВЫБРАТЬ</button>";
         document.getElementById("wallpaper_choice_" + new_row_id).onclick = changeProcessWallpaper;
     } else {
@@ -321,6 +398,7 @@ function addProcess(name, current_type, wallpaper) {
 
     document.getElementById("delete_process_" + new_row_id).onclick = deleteProcess;
 
+    reSizeProcessTable();
     reOrder();
 }
 
@@ -381,7 +459,6 @@ async function changeDefaultWallpaper(event) {
 }
 
 function initProcesses(processes) {
-
     header = process_table.insertRow(0);
 
     order_th = header.insertCell(0);
@@ -486,9 +563,6 @@ async function onExit() {
 /**************************************************
 * LOCALES
 ***************************************************/
-
-locale = "EN";
-
 async function onLanguageChange(select) {
     locale = select.options[select.selectedIndex].value;
     await eel.changeLanguage(locale)();
@@ -504,6 +578,8 @@ function setLocale(locale) {
         setEnglish();
         document.getElementById("language_changer").value="EN";
     }
+
+    reSizeProcessTable();
 }
 
 
@@ -680,5 +756,12 @@ async function init() {
     setActions();
 };
 
+function initEvents() {
+    window.addEventListener('resize', function(event) {
+        reSizeProcessTable();
+    }, true);
+}
+
 //RUN
 init();
+initEvents();

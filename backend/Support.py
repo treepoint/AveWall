@@ -30,7 +30,7 @@ class Support:
         }
 
         config['PROCESSES'] = {
-            1 : 'change_my_name.exe, ./assets/black.jpg'
+            1 : 'change_my_name.exe,./assets/black.jpg'
         }
 
         self.writeConfig(config)
@@ -60,9 +60,8 @@ class Support:
             process = process[1].split(',')
 
             if str(process[0]).lower() in running_processes:
-                if process[1] == 'CUSTOM':
+                if process[1].replace(' ', '') == 'CUSTOM':
                     return process[2]
-                
                 else:
                     return process[1]
             
