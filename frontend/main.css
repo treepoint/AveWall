@@ -1,0 +1,333 @@
+body {
+    padding-left: 8px;
+}
+
+.button {
+    border-radius: 6px;
+    border: 0px;
+    padding: 6px 12px;
+    font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: rgb(212 212 212);
+    border: 0px;
+    min-width: fit-content;
+    font-weight: bold;
+}
+
+.button:hover {
+    background-color: rgb(187, 187, 187)
+}
+
+.tabs {
+    display: flex;
+    flex-direction: row;
+}
+
+.tabs .tab {
+    display: flex;
+    flex-direction: row;
+    border-radius: 0px;
+    background-color: rgb(235, 235, 235);
+    padding: 6px 12px;
+    border: 0px solid #b4b4b4;
+}
+
+.tabs .tab:hover {
+    display: flex;
+    flex-direction: row;
+    border-radius: 0px;
+    background-color: rgb(187, 187, 187);
+}
+
+.tabs .tab.active {
+    font-weight: bold;
+    background-color: rgb(212, 212, 212);
+}
+
+.tabs .tab.active:hover {
+    font-weight: bold;
+    background-color: rgb(212, 212, 212);
+}
+
+.tabs .tab:hover {
+    background-color: rgb(187, 187, 187);
+}
+
+.tabs .tab:last-child {
+    display: flex;
+    flex-direction: row;
+    border-radius: 0px 6px 6px 0px;
+    border-left: 1px solid #b4b4b4;
+}
+
+.tabs .tab:first-child{
+    display: flex;
+    flex-direction: row;
+    border-radius: 6px 0px 0px 6px;
+    border-right: 1px solid #b4b4b4;
+}
+
+body {
+    font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 4px;
+    margin-top: 24px;
+}
+
+h2 {
+    font-size: 16px;
+    margin-bottom: 8px;
+    margin-top: 16px;
+}
+
+.settings {
+    display: flex;
+    flex-direction: column;
+    margin-top: -12px;
+}
+
+.actions_buttons {
+    display: flex;
+    flex-direction: row;
+    column-gap: 12px;
+    flex-wrap: wrap;
+}
+
+.process_table {
+    text-align: left;
+    max-width: calc(100vw - 35px);
+    font-size: 14px;
+}
+
+.processes_header {
+    font-size: 12px;
+    border-bottom: 2px solid #d4d4d4;
+    border-radius: 6px;
+    padding: 0px 2px 4px 6px;
+    text-align: center;
+    font-weight: bold;
+    opacity: 0.4;
+}
+
+
+.input_item {
+    background-color: rgb(235, 235, 235);
+    padding: 4px 8px;
+    border-radius: 6px;
+    padding-left: 8px;
+    height: 20px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.input_item.half-round {
+    border-radius: 6px 0px 0px 6px;
+}
+
+.input_item.hundred {
+    width: calc(100% - 16px);
+    max-width: calc(100% - 16px);
+}
+
+.input_item.max_200 {
+    max-width: 200px;
+}
+
+.input_item.rtl {
+    margin-right: auto;
+    text-align: end;
+}
+
+.input_item.half {
+    width: calc((100vw / 2) - 172px);
+}
+
+select {
+    background-color: rgb(235, 235, 235);
+    padding: 4px 8px;
+    border-radius: 6px;
+    padding-left: 8px;
+    border: none;
+    padding-right: 4px;
+    outline: none;
+    height: 28px;
+    margin-right: 4px;
+}
+
+.process_name:hover, .process_wallpaper:hover {
+    background-color: rgb(187, 187, 187);
+}
+
+.plus {
+    margin-top: 4px;
+    width: 32px;
+    height: 32px;
+    margin-left: calc(50% - 16px);
+    
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    
+    position: relative;
+      
+    &:after, &:before {
+      content: '';
+      position: absolute;
+      background: #b9b9b9;
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+      border-radius: 5px;
+    }
+    
+    &:after {
+      width: 21px;
+      height: 3px;
+      left: 6px;
+      top: 15px;
+    }
+    
+    &:before {
+      width: 3px;
+      height: 22px;
+      left: 15px;
+      top: 6px;
+    }
+  }
+
+.plus:hover {
+    &:after, &:before {
+        content: '';
+        background: rgb(138, 138, 138);
+    }
+}
+
+.delete_process {
+    transform: rotate(45deg);
+    margin-top: 0px;
+    width: 32px;
+    height: 32px;
+    margin-left: calc(50% - 16px);
+
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+
+    position: relative;
+      
+    &:after, &:before {
+        content: '';
+        position: absolute;
+        background: #b9b9b9;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+    }
+    
+    &:after {
+        width: 17px;
+        height: 3px;
+        left: 7px;
+        top: 14px;
+    }
+    
+    &:before {
+        width: 3px;
+        height: 17px;
+        left: 14px;
+        top: 7px;
+    }
+  }
+
+.delete_process:hover {
+    &:after, &:before {
+        content: '';
+        background: rgb(180, 84, 84);
+    }
+}
+
+.hint {
+    font-size: 12px;
+    margin-bottom: 12px;
+    color: #8b8b8b;
+    width: calc(100vw - 42px);
+}
+
+.modal {
+    width: fit-content;
+    height: fit-content;
+    background: #f6fff9;
+    border: 1px solid #339959;
+    border-bottom: 2px solid #339959;
+    padding: 4px 16px;
+    font-size: 14px;
+    border-radius: 4px;
+    color: #107d15;
+    float: left;
+    position: fixed;
+    bottom: 12px;
+    right: 32px;
+    box-shadow: 0px 2px 4px #00000052;
+    transition: 75ms linear; 
+}
+
+.modal.hidden {
+    bottom: -36px;
+}
+
+input[type="file"] {
+    display: none;
+}
+.custom-file-upload {
+    background-color: rgb(212 212 212);
+    padding: 4px 8px;
+    border-radius: 0px 6px 6px 0px;
+    padding-left: 8px;
+    display: block;
+    min-width: max-content;
+    font-weight: bold;
+    margin-left: -4px;
+    height: 28px;
+    margin-right: 4px;
+    outline: none;
+    border: none;
+}
+
+.custom-file-upload:hover {
+    background-color: rgb(187, 187, 187);
+}
+
+.default_loader {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    width: 100%;
+    column-gap: 12px;
+}
+
+.flex_row {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    max-width: calc(100vw - 246px);
+    overflow: auto;
+}
+
+.rtl {
+    max-width: fit-content;
+    margin-right: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-bottom: 6px;
+    padding-top: 2px;
+}
+
+.invisible {
+    display: none;
+}
+
+.language_changer {
+    width: 200px;
+}

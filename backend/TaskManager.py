@@ -16,7 +16,7 @@ class TaskManager:
                 'action' : 'add'
             }
 
-            self.main.support.writeConfig()
+            self.main.support.writeConfig(self.main.config)
             pyuac.runAsAdmin()
         else:
             task_def = scheduler.NewTask(0)
@@ -64,7 +64,7 @@ class TaskManager:
                 'action' : 'delete'
             }
 
-            self.main.support.writeConfig()
+            self.main.support.writeConfig(self.main.config)
             pyuac.runAsAdmin()
         else:
             if self.checkThatAutostartIsActive():
@@ -81,3 +81,11 @@ class TaskManager:
         is_task_exist = bool(len(list(filter(lambda task: (task.name == task_name), tasks))))
 
         return is_task_exist
+    
+    def autostartProcessing(self):
+        if self.main.config.has_section('AUTO'):
+            if self.main.config['AUTO']['action'] == 'add':
+                self.addToAutostart()
+            
+            if self.main.config['AUTO']['action'] == 'delete':
+                self.removeFromAutostart()

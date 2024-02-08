@@ -1,72 +1,47 @@
-from Tray import Tray
-from Support import Support
-from TaskManager import TaskManager
+import os
 
-class WallpaperChanger:
+#eel fix
+import sys, io
+if hasattr(sys, "_MEIPASS"):
+    buffer = io.StringIO()
+    sys.stdout = sys.stderr = buffer
+
+from backend.Tray import Tray
+from backend.WallpaperChanger import WallpaperChanger
+from backend.TaskManager import TaskManager
+from backend.Support import Support
+
+class Main():
     def __init__(self):
         self.settings_file = 'settings.ini'
         self.application_name = 'AveWall'
 
         self.support = Support(self.settings_file, self)
+        self.config = self.support.readConfig()
 
+        #Глобальное состояние
+        self.state = {}
+
+        #Обрабатываем автостарт
         self.task_manager = TaskManager(self)
+        self.state['autostart_is_on'] = self.task_manager.checkThatAutostartIsActive()
+        self.state['transcodedwallpaper_path'] = os.path.join(os.getenv('APPDATA'), 'Microsoft', 'Windows', 'Themes', 'TranscodedWallpaper')
 
-        self.support.readConfig()
-        self.support.generateBlackWallpaper()
-        self.support.getDefaultWindowsWallpaper()
-
-        self.config = self.support.returnConfig()
-        self.current_state = None
-
-        self.autostart_is_on = self.task_manager.checkThatAutostartIsActive()
-
-        if self.support.autostart_action == 'add':
-            self.task_manager.addToAutostart()
-        
-        if self.support.autostart_action == 'delete':
-            self.task_manager.removeFromAutostart()
-
-    def swapWallpapers(self):
-        match self.support.mode:
-            case 'auto':
-                #Определяем есть ли указанные процессы
-                new_state = self.support.checkThatTargetProcessesRunning(self.support.target_processes)
-
-                if not new_state:
-                    new_state = 'default'
-            case 'black':
-                new_state = 'black'
-            case 'default':
-                new_state = 'default'
-
-        if (new_state == self.current_state) and self.current_state is not None:
-            return
-
-        #Определяем обои
-        if new_state == 'black' and new_state != self.current_state:
-            wallpaper = self.support.black_wallpaper
-        elif new_state == 'default':
-            wallpaper = self.support.default_wallpaper
-        else:
-            wallpaper = new_state
-        
-        #Выставляем
-        self.support.setWallpaper(wallpaper)
-
-        #Обновляем статус
-        self.current_state = new_state
+        self.task_manager.autostartProcessing()
 
 if __name__ == '__main__':
-    main = WallpaperChanger()
+    main = Main()
+    wallpaperChainger = WallpaperChanger(main)
 
-    if main.support.autostart_action:
-        sections = main.support.config.remove_section('AUTO')
-        main.support.writeConfig()
+    if main.config.has_option('AUTO','action'):
+        main.config.remove_section('AUTO')
+        
+        main.support.writeConfig(main.config)
     else:
         if not main.support.chechDoubledStart():
-            tray = Tray(main)
+            tray = Tray(main, wallpaperChainger)
 
 ##TODO:
-##Фичи:
-#1. Readme при первом запуске
-#2. Настройка соответствия аплика и приложения
+            
+##Отладка
+#1. Оптимизации (лаги в A Plague Tale)                               

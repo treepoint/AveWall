@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="main.css">
+    <script type="text/javascript" src="/eel.js"></script>
+    <title>AveWall</title>
+    <link rel="icon" type="image/x-icon" href="icon.ico">
+</head>
+    <body>
+        <div class="settings">
+            <h1 id="h1_settings">SETTINGS</h1>
+            <div>
+                <input type="checkbox" id="autostart" name="settings" value='false'/>
+                <label for="autostart" id="autostart_label">Autostart with windows</label>
+            </div>
+            <h2 id="h2_language">Language</h2>
+            <select id="language_changer" class="language_changer" onchange=onLanguageChange(this)>
+                <option value="EN">English</option>
+                <option value="RU">Русский</option>
+            </select>
+            <h2 id="h2_default_wallpaper">Default wallpaper</h2>
+            <div class="default_loader">
+                <div class="flex_row">
+                    <div class="input_item half-round hundred rtl" dir="RTL">
+                        <bdi id="default_wallpaper" class="rtl"></bdi>
+                    </div>
+                    <button id="default_wallpaper_choice" class="custom-file-upload">MANUAL SET</button>
+                </div>
+                <button id="set-wall-as-default" type="button" class="button">GET CURRENT AS DEFAULT</button>
+            </div>
+        </div>
+        <div class="processes">
+            <h1 id="h1_processes">PROCESS LIST</h1>
+            <div id="processes_hint"class="hint">Arrange the processes in order of importance. 
+                For example, if you want the Outlook wallpaper to have a 
+                higher priority than Filezilla, put Outlook priority 1 and Filezilla priority 2.
+            </div>
+            <div>
+            <table id="process_table" class="process_table">
+            </table>
+            </div>
+            <div id="plus" class="plus"></div>
+        </div>
+        <div class="mods">
+            <h1 id="h1_mode">MODE</h1>
+            <div id="mode_hint" class="hint">
+                Auto — AveWall will work by process list. 
+                Default — forced set up default wallpaper. 
+                Black — forced black wallpaper.
+            </div>
+            <div id="mods" class="tabs">
+                <button id="set-auto" type="button" class="tab">AUTO</button>
+                <button id="set-default" type="button" class="tab">DEFAULT</button>
+                <button id="set-black" type="button" class="tab">BLACK</button>
+            </div>
+        </div>
+        <div class="actions">
+            <h1 id="h1_actions">ACTIONS</h1>
+            <div class="actions_buttons">
+                <button id="reload-config" type="button" class="button">RELOAD CONFIG</button>
+                <button id="close" type="button" class="button">CLOSE WINDOW</button>
+                <button id="exit" type="button" class="button">EXIT APPLICATION</button>
+            </div>
+        </div>
+        <div id="modal" class="modal hidden">
+            Saved
+        </div>
+        <script src="main.js"></script>
+    </body>
+</html>

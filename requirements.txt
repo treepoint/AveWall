@@ -3,3 +3,4 @@ PyQt6
 psutil
 auto-py-to-exe
 pyuac
+eel
