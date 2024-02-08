@@ -22,15 +22,15 @@ class Support:
         config = configparser.ConfigParser()
 
         config['MAIN'] = {
-            'black_wallpaper' : './assets/black.jpg',
-            'default_wallpaper' : './assets/default.jpg',
+            'black_wallpaper' : './AW_assets/black.jpg',
+            'default_wallpaper' : './AW_assets/default.jpg',
             'polling_timeout' : 1,
             'mode' : 'auto',
             'locale' : self.getCurrentSystemLanguage()
         }
 
         config['PROCESSES'] = {
-            1 : 'change_my_name.exe,./assets/black.jpg'
+            1 : 'change_my_name.exe,./AW_assets/black.jpg'
         }
 
         self.writeConfig(config)

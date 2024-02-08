@@ -8,7 +8,6 @@ class WallpaperChanger:
     def __init__(self, main):
         self.main = main
 
-        self.generateBlackWallpaper()
         self.getDefaultWindowsWallpaper()
 
         self.current_state = None
@@ -29,37 +28,35 @@ class WallpaperChanger:
         if ((new_state == self.current_state) and self.current_state is not None) and not is_force:
             return
 
-        #Определяем обои
+        #Определяем и выставляем обои
         if new_state == 'BLACK' and new_state != self.current_state:
-            wallpaper = self.main.config['MAIN']['black_wallpaper']
+            wallpaper = self.generateBlackWallpaper()
+            ctypes.windll.user32.SystemParametersInfoW(20, 0, os.path.abspath(wallpaper), 3)
+            os.remove(wallpaper)
         elif new_state == 'DEFAULT':
-            wallpaper = self.main.config['MAIN']['default_wallpaper']
+            ctypes.windll.user32.SystemParametersInfoW(20, 0, os.path.abspath(self.main.config['MAIN']['default_wallpaper']), 3)
         else:
-            wallpaper = new_state
+            ctypes.windll.user32.SystemParametersInfoW(20, 0, os.path.abspath(new_state), 3)
         
-        #Выставляем
-        self.setWallpaper(wallpaper)
-
         #Обновляем статус
         self.current_state = new_state
 
-    def setWallpaper(self, path):
-        ctypes.windll.user32.SystemParametersInfoW(20, 0, os.path.abspath(path), 3)
-
     def generateBlackWallpaper(self):
-        if not os.path.isfile(self.main.config['MAIN']['black_wallpaper']):
-            image = Image.new('RGB', (1, 1), 'black')
-            ImageDraw.Draw(image)
+        path = f'{self.main.state['transcodedwallpaper_path']}.jpg'
 
-            image.save(self.main.config['MAIN']['black_wallpaper'])
+        image = Image.new('RGB', (1, 1), 'black')
+        ImageDraw.Draw(image)
+
+        image.save(path)
+
+        return path
 
     def getDefaultWindowsWallpaper(self, is_force = False):
         if (not os.path.isfile(self.main.config['MAIN']['default_wallpaper']) or is_force):
-            current_wallpaper_location = os.path.join(os.getenv('APPDATA'), 'Microsoft', 'Windows', 'Themes', 'TranscodedWallpaper')
             
-            shutil.copy2(current_wallpaper_location, './assets')
+            shutil.copy2(self.main.state['transcodedwallpaper_path'], './AW_assets')
 
-            self.main.config['MAIN']['default_wallpaper'] = './assets/default.jpg'
+            self.main.config['MAIN']['default_wallpaper'] = './AW_assets/default.jpg'
             self.main.support.writeConfig(self.main.config)
 
         return

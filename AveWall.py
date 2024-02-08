@@ -1,3 +1,5 @@
+import os
+
 from backend.Tray import Tray
 from backend.WallpaperChanger import WallpaperChanger
 from backend.TaskManager import TaskManager
@@ -17,7 +19,8 @@ class Main():
         #Обрабатываем автостарт
         self.task_manager = TaskManager(self)
         self.state['autostart_is_on'] = self.task_manager.checkThatAutostartIsActive()
-        
+        self.state['transcodedwallpaper_path'] = os.path.join(os.getenv('APPDATA'), 'Microsoft', 'Windows', 'Themes', 'TranscodedWallpaper')
+
         self.task_manager.autostartProcessing()
 
 if __name__ == '__main__':
@@ -33,9 +36,6 @@ if __name__ == '__main__':
             tray = Tray(main, wallpaperChainger)
 
 ##TODO:
-##Фичи:
-#1. Black не генерировать, а сразу писать напрямую в папку винды (опционально)
             
 ##Отладка
 #1. Оптимизации (лаги в A Plague Tale)
-#2. Адаптивная таблица при переключении языков
