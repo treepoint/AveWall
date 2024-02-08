@@ -2,6 +2,7 @@ import os
 import eel
 import json
 import ctypes
+import gevent
 from tkinter import *
 from tkinter import filedialog
 user32 = ctypes.windll.user32
@@ -81,11 +82,15 @@ class Interface():
         basic_height = 640
         height = min(1280, basic_height + 44*len(self.tray.main.config['PROCESSES']))
 
-        eel.start('index.html', 
+        eel.start( 'index.html', 
                    mode=self.browserAndMode['mode'], 
                    size=(width, height), 
+                   port=62351,
+                   block=False,
                    position=((user32.GetSystemMetrics(0)-width)/2, (user32.GetSystemMetrics(1)-height)/2)
                 )
+        
+        gevent.get_hub().join()
 
     def returnState(self):
         return json.dumps(self.tray.main.state)

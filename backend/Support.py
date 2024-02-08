@@ -22,28 +22,25 @@ class Support:
         config = configparser.ConfigParser()
 
         config['MAIN'] = {
-            'black_wallpaper' : './AW_assets/black.jpg',
-            'default_wallpaper' : './AW_assets/default.jpg',
+            'default_wallpaper' : './AW_default_wallpaper.jpg',
             'polling_timeout' : 1,
             'mode' : 'auto',
             'locale' : self.getCurrentSystemLanguage()
         }
 
         config['PROCESSES'] = {
-            1 : 'change_my_name.exe,./AW_assets/black.jpg'
+            1 : 'change_my_name.exe,DEFAULT,'
         }
 
         self.writeConfig(config)
-
-        return config
 
     def readConfig(self):
         config = configparser.ConfigParser()
 
         #Проверяем, что файл в наличии
         if len(config.read(self.settings_file, encoding='utf-8')) != 1:
-            config = self.createDefaultConfigFile()
-            config = config.read(self.settings_file, encoding='utf-8')
+            self.createDefaultConfigFile()
+            config = self.readConfig()
 
         return config
 
@@ -86,16 +83,21 @@ class Support:
     
     #Чтобы включать картинки напрямую в аплик
     def resource_path(self, relative_path):
-        base_path = getattr(
-            sys,
-            '_MEIPASS',
-            os.path.dirname(os.path.abspath(__file__)))
-        return os.path.join(base_path, relative_path)
+        if not hasattr(sys, "_MEIPASS"):
+            return relative_path
+        
+        else:
+            base_path = getattr(
+                sys,
+                '_MEIPASS',
+                os.path.dirname(os.path.abspath(__file__)))
+            
+            return os.path.join(base_path, relative_path)
     
-    def getCurrentSystemLanguage():
-        locale = locale.getdefaultlocale()[0]
+    def getCurrentSystemLanguage(self):
+        current_locale = locale.getdefaultlocale()[0]
 
-        if 'ru' in locale:
+        if 'ru' in current_locale:
             return 'RU'
         else:
             return 'EN'

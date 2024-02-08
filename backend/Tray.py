@@ -13,7 +13,7 @@ class Tray():
         self.wallpaperChainger = WallpaperChainger
 
         #Собираем сам трей
-        path = self.main.support.resource_path('../AW_assets/icon.png')
+        path = self.main.support.resource_path('./AW_assets/icon.png')
         self.icon = Image.open(path)
 
         #Собираем меню

@@ -1,5 +1,11 @@
 import os
 
+#eel fix
+import sys, io
+if hasattr(sys, "_MEIPASS"):
+    buffer = io.StringIO()
+    sys.stdout = sys.stderr = buffer
+
 from backend.Tray import Tray
 from backend.WallpaperChanger import WallpaperChanger
 from backend.TaskManager import TaskManager
@@ -38,4 +44,4 @@ if __name__ == '__main__':
 ##TODO:
             
 ##Отладка
-#1. Оптимизации (лаги в A Plague Tale)
+#1. Оптимизации (лаги в A Plague Tale)                               
