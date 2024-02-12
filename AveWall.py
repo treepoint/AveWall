@@ -22,6 +22,8 @@ class Main():
         #Глобальное состояние
         self.state = {}
 
+        self.state['prev_pids'] = None
+
         #Обрабатываем автостарт
         self.task_manager = TaskManager(self)
         self.state['autostart_is_on'] = self.task_manager.checkThatAutostartIsActive()
@@ -40,8 +42,3 @@ if __name__ == '__main__':
     else:
         if not main.support.chechDoubledStart():
             tray = Tray(main, wallpaperChainger)
-
-##TODO:
-            
-##Отладка
-#1. Оптимизации (лаги в A Plague Tale)                               

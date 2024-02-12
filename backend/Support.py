@@ -45,29 +45,37 @@ class Support:
         return config
 
     def checkThatTargetProcessesRunning(self, processes):
-        running_processes = []
+        prev_pids = self.main.state['prev_pids']
 
-        #Получим все запущенные процессы, искать будем в Python
-        for r_process in psutil.process_iter():
-            running_processes.append(r_process.name().lower())
+        #Если прошлых pid's нет — значит совсем свежак
+        if not prev_pids:
+            self.main.state['prev_pids'] = psutil.pids()
+            return
+                        
+        #При включение-выключении одного процесса все круто, но нам надо еще смотреть по приоритетам.
+        #То есть каждый раз, даже если процесс еще работает, нам надо смотреть по разнице pid'ов, не появился ли
+        #молодой человечек круче нашего текущего, который бы переопределял обоину
+        current_pids = psutil.pids()
+        new_pids = set(current_pids) - set(prev_pids)
 
-        #Если нет — ищем по всему списку
-        for process in processes:
-            
-            process = process[1].split(',')
+        if new_pids:
+            new_pids = list(new_pids)
+            new_pids.sort()
 
-            if str(process[0]).lower() in running_processes:
-                if process[1].replace(' ', '') == 'CUSTOM':
-                    return process[2]
-                else:
-                    return process[1]
-            
-            #И небольшая пауза между этим всем, чтобы не было пиковой нагрузки
-            time.sleep(0.01)
+            for process in processes:
+                process = process[1].split(',')
+
+                for pid in new_pids:
+                    new_process = str(psutil.Process(pid).name()).lower()
+                    
+                    if new_process == str(process[0]).lower():
+                        if process[1].replace(' ', '') == 'CUSTOM':
+                            return process[2]
+                        else:
+                            return process[1]
+
+        self.main.state['prev_pids'] = current_pids
         
-        #Нет так нет
-        return False
-
     def chechDoubledStart(self):
         instance_count = len(list(process for process in psutil.process_iter() 
                                   if process.name() == f'{self.main.application_name}.exe'))
@@ -101,3 +109,37 @@ class Support:
             return 'RU'
         else:
             return 'EN'
+        
+
+    def wait_for_process_by_name(name, poll_interval=0.1, timeout=None):
+        """Wait for process with name "name" to be started
+        and return a Process() instance when this happens.
+
+        If "timeout" is specified OSError is raised if the process
+        doesn't appear within the time specified, which is expressed
+        in seconds.
+        """
+        if timeout is not None:
+            raise_at = time.time() + timeout
+        else:
+            raise_at = None
+        while 1:
+            pids1 = psutil.get_pid_list()
+            time.sleep(poll_interval)
+            pids2 = psutil.get_pid_list()
+            new_pids = set(pids2) - set(pids1)
+            if new_pids:
+                new_pids = list(new_pids)
+                new_pids.sort()
+                for pid in new_pids:
+                    print(psutil.Process(pid).name)
+                    try:
+                        p = psutil.Process(pid)
+                    except psutil.NoSuchProcess:
+                        # process is dead in meantime
+                        continue
+                    else:
+                        if p.name == name:
+                            return p
+            if raise_at is not None and time.time() >= raise_at:
+                raise OSError("timeout")

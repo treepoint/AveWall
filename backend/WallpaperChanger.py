@@ -28,15 +28,16 @@ class WallpaperChanger:
         if ((new_state == self.current_state) and self.current_state is not None) and not is_force:
             return
 
-        #Определяем и выставляем обои
-        if new_state == 'BLACK' and new_state != self.current_state:
-            wallpaper = self.generateBlackWallpaper()
-            ctypes.windll.user32.SystemParametersInfoW(20, 0, os.path.abspath(wallpaper), 3)
-            os.remove(wallpaper)
-        elif new_state == 'DEFAULT':
-            ctypes.windll.user32.SystemParametersInfoW(20, 0, os.path.abspath(self.main.config['MAIN']['default_wallpaper']), 3)
-        else:
-            ctypes.windll.user32.SystemParametersInfoW(20, 0, os.path.abspath(new_state), 3)
+        if new_state != self.current_state:
+            #Определяем и выставляем обои
+            if new_state == 'BLACK':
+                wallpaper = self.generateBlackWallpaper()
+                ctypes.windll.user32.SystemParametersInfoW(20, 0, os.path.abspath(wallpaper), 3)
+                os.remove(wallpaper)
+            elif new_state == 'DEFAULT':
+                ctypes.windll.user32.SystemParametersInfoW(20, 0, os.path.abspath(self.main.config['MAIN']['default_wallpaper']), 3)
+            else:
+                ctypes.windll.user32.SystemParametersInfoW(20, 0, os.path.abspath(new_state), 3)
         
         #Обновляем статус
         self.current_state = new_state
