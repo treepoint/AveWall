@@ -66,7 +66,12 @@ class Support:
                 process = process[1].split(',')
 
                 for pid in new_pids:
-                    new_process = str(psutil.Process(pid).name()).lower()
+                    try:
+                        new_process = str(psutil.Process(pid).name()).lower()
+                    
+                    #Заглушка, иногда оно путается в показаниях, видимо что-то успевает умереть
+                    except psutil.NoSuchProcess:
+                        pass
                     
                     if new_process == str(process[0]).lower():
                         if process[1].replace(' ', '') == 'CUSTOM':

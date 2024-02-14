@@ -91,20 +91,21 @@ function reSizeProcessTable() {
     window_width = window.innerWidth;
 
     //Вычтем статичные вещи
-    order_cell_width = 44;
     delete_button_width = 46;
     paddings = 8 + 8 + 56;
-
-    free_width = window_width - order_cell_width - delete_button_width - paddings;
 
     //Вычтем кнопки SET
     if (locale == 'EN') {
         set_width = 52;
         mode_width = 82;
+        order_cell_width = 44;
     } else {
         set_width = 88;
         mode_width = 134;
+        order_cell_width = 70;
     }
+
+    free_width = window_width - order_cell_width - delete_button_width - paddings;
 
     //У неуменьшенной версии таблицы кнопок таких две
     if (process_table_shrinked) {
@@ -462,6 +463,7 @@ function initProcesses(processes) {
     header = process_table.insertRow(0);
 
     order_th = header.insertCell(0);
+    order_th.innerHTML = "<div id='processes_header_priority' class='processes_header'>priority</div>";
     process_th = header.insertCell(1);
     process_th.innerHTML = "<div id='processes_header_process' class='processes_header'>process</div>";
 
@@ -593,6 +595,7 @@ function setRussian() {
 
     document.getElementById("h1_processes").innerHTML = "СПИСОК ПРОЦЕССОВ";
         document.getElementById("processes_hint").innerHTML = "Расположите процессы в порядке их важности. Например, если вы хотите, чтобы обои Outlook имели более высокий приоритет чем Filezilla, то поставьте Outlook приоритет 1, а Filezilla — приоритет 2.";
+        document.getElementById("processes_header_priority").innerHTML = "приоритет";
         document.getElementById("processes_header_process").innerHTML = "процесс";
         document.getElementById("processes_header_mode").innerHTML = "режим";
         document.getElementById("processes_header_wallpaper").innerHTML = "обои";
@@ -651,6 +654,7 @@ function setEnglish() {
 
     document.getElementById("h1_processes").innerHTML = "PROCESS LIST";
         document.getElementById("processes_hint").innerHTML = "Arrange the processes in order of importance. For example, if you want the Outlook wallpaper to have a higher priority than Filezilla, put Outlook priority 1 and Filezilla priority 2.";
+        document.getElementById("processes_header_priority").innerHTML = "priority";
         document.getElementById("processes_header_process").innerHTML = "process";
         document.getElementById("processes_header_mode").innerHTML = "mode";
         document.getElementById("processes_header_wallpaper").innerHTML = "wallpaper";

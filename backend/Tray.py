@@ -92,7 +92,11 @@ class Tray():
         self.initMenu()
 
     def showInterface(self):
-        self.interface.open()
+        #По какой-то невнятной причине оно любит падать внутри 
+        try:
+            self.interface.open()
+        except:
+            pass
 
     def onExit(self, icon=False, item=False):
         self.tray.stop()
