@@ -69,15 +69,15 @@ class Support:
                     try:
                         new_process = str(psutil.Process(pid).name()).lower()
                     
+                        if new_process == str(process[0]).lower():
+                            if process[1].replace(' ', '') == 'CUSTOM':
+                                return process[2]
+                            else:
+                                return process[1]
+                        
                     #Заглушка, иногда оно путается в показаниях, видимо что-то успевает умереть
                     except psutil.NoSuchProcess:
                         pass
-                    
-                    if new_process == str(process[0]).lower():
-                        if process[1].replace(' ', '') == 'CUSTOM':
-                            return process[2]
-                        else:
-                            return process[1]
 
         self.main.state['prev_pids'] = current_pids
         
