@@ -93,7 +93,12 @@ class Interface():
         gevent.get_hub().join()
 
     def returnState(self):
-        return json.dumps(self.tray.main.state)
+        def set_default(obj):
+            if isinstance(obj, set):
+                return list(obj)
+            raise TypeError
+    
+        return json.dumps(self.tray.main.state, default=set_default)
 
     def returnConfig(self):
         result = {}
@@ -115,8 +120,10 @@ class Interface():
             processes[process['id']] = f'{process['name']},{process['type']},{process['wallpaper']}'
 
         self.tray.main.config['PROCESSES'] = processes
-            
         self.tray.main.support.writeConfig(self.tray.main.config)
+
+        self.tray.main.state['prev_pids'] = None
+        self.tray.main.state['prev_state'] = None
 
     def getFileWithPath(self, type):
         root = Tk()

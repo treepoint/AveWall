@@ -23,7 +23,10 @@ class Main():
         self.state = {}
 
         self.state['prev_pids'] = None
-
+        self.state['prev_state'] = None
+        self.state['prev_processes'] = None
+        self.state['prev_state_process_PID'] = None
+         
         #Обрабатываем автостарт
         self.task_manager = TaskManager(self)
         self.state['autostart_is_on'] = self.task_manager.checkThatAutostartIsActive()

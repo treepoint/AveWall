@@ -8,6 +8,8 @@ import psutil
 import time
 #system language
 import locale
+#copy
+import copy
 
 class Support:
     def __init__(self, setting_file, Main):
@@ -43,33 +45,49 @@ class Support:
             config = self.readConfig()
 
         return config
+    
+    def getProcessDiff(self):
+        #pid'ы с прошлого состояния
+        prev_pids = copy.copy(self.main.state['prev_pids'])
 
-    def checkThatTargetProcessesRunning(self, processes):
-        prev_pids = self.main.state['prev_pids']
+        #pid'ы что есть сейчас
+        current_pids = set(psutil.pids())
 
-        #Если прошлых pid's нет — значит совсем свежак
+        #чуть фильтранем, надеюсь в винде среднем хотя бы 1к служебных процессов
+        current_pids = set(filter(lambda x:x >= 1000, current_pids))
+
+        new_diff = set()
+        del_diff = set()
+
+        #Находим разницу
         if not prev_pids:
-            self.main.state['prev_pids'] = psutil.pids()
-            return
-                        
-        #При включение-выключении одного процесса все круто, но нам надо еще смотреть по приоритетам.
-        #То есть каждый раз, даже если процесс еще работает, нам надо смотреть по разнице pid'ов, не появился ли
-        #молодой человечек круче нашего текущего, который бы переопределял обоину
-        current_pids = psutil.pids()
-        new_pids = set(current_pids) - set(prev_pids)
+            #Если прошлых pid's нет — значит совсем свежак
+            new_diff = current_pids
+        else:
+            new_diff = current_pids - set(prev_pids)
+            del_diff = set(prev_pids) - current_pids
 
-        if new_pids:
-            new_pids = list(new_pids)
-            new_pids.sort()
+        self.main.state['prev_pids'] = current_pids
 
-            for process in processes:
+        result = {  
+                    'new_diff' : new_diff, 
+                    'del_diff' : del_diff,
+                    'current_pids' : current_pids
+                }
+
+        return result
+    
+    def getStateByProcessCollection(self, processes, pids):
+        for process in processes:
                 process = process[1].split(',')
 
-                for pid in new_pids:
+                for pid in pids:
                     try:
                         new_process = str(psutil.Process(pid).name()).lower()
-                    
+
                         if new_process == str(process[0]).lower():
+                            self.main.state['prev_state_process_PID'] = pid
+
                             if process[1].replace(' ', '') == 'CUSTOM':
                                 return process[2]
                             else:
@@ -79,8 +97,69 @@ class Support:
                     except psutil.NoSuchProcess:
                         pass
 
-        self.main.state['prev_pids'] = current_pids
-        
+    def getNewStateByProcesses(self, process_diff, processes):
+        new_diff = process_diff['new_diff']
+        del_diff = process_diff['del_diff']
+
+        is_target_pid_del = False
+        new_state = self.main.state['prev_state']
+
+        #Если родились новые процессы
+        if len(new_diff) > 0:
+            new_pids = list(new_diff)
+            new_pids.sort()
+
+            new_state = self.getStateByProcessCollection(processes, new_pids)
+   
+        #Если какие-то процессы умерли
+        if len(del_diff) > 0: 
+            del_pids = list(del_diff)
+            del_pids.sort()
+
+            for process in processes:
+                process = process[1].split(',')
+
+                #Сначала поймем, а наш ли это клиент умер
+                is_target_pid_del = False
+
+                for pid in del_pids:
+                    try:
+                        #Если PID удаленного процесса совпадает с тем, который ранее задавал создание то
+                        #Ставим флажок, по которому потом снова пересчитаем новый стейт
+                        if self.main.state['prev_state_process_PID'] == pid:
+                            is_target_pid_del = True
+                    #Заглушка, иногда оно путается в показаниях, видимо что-то успевает умереть
+                    except psutil.NoSuchProcess:
+                        pass
+            
+        #Если умер наш клиент или список проверяемых процессов изменился,
+        #то тогда прогоняем по всей коллекции процессов
+        if is_target_pid_del or self.main.state['prev_processes'] != processes:
+            new_state = self.getStateByProcessCollection(processes, process_diff['current_pids'])
+
+        #Пишем коллекцию процессов по которой проверяли как прошлую
+        self.main.state['prev_processes'] = processes
+
+        return new_state
+
+    def checkThatTargetProcessesRunning(self, processes):
+
+        process_diff = self.getProcessDiff()
+        new_state = self.getNewStateByProcesses(process_diff, processes)
+
+        if not new_state:
+            self.main.state['prev_state'] = None
+            self.main.state['prev_state_process_PID'] = None
+            return 'DEFAULT'
+
+        #Проверяем, что если прошлое состояние осталось таким же как и раньше, то ничего не меняем
+        if self.main.state['prev_state'] == new_state:
+            return 'no changes'
+        else:
+        #Иначе меняем записанное прошлое состояние и возвращаем статус
+            self.main.state['prev_state'] = new_state
+            return new_state
+
     def chechDoubledStart(self):
         instance_count = len(list(process for process in psutil.process_iter() 
                                   if process.name() == f'{self.main.application_name}.exe'))
@@ -137,7 +216,6 @@ class Support:
                 new_pids = list(new_pids)
                 new_pids.sort()
                 for pid in new_pids:
-                    print(psutil.Process(pid).name)
                     try:
                         p = psutil.Process(pid)
                     except psutil.NoSuchProcess:
