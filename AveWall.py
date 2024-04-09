@@ -46,6 +46,3 @@ if __name__ == '__main__':
     else:
         if not main.support.chechDoubledStart():
             tray = Tray(main, wallpaperChainger)
-
-#TODO:
-#1. Номер версии во фронт

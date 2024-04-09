@@ -170,8 +170,12 @@ class Support:
         #Если родились новые процессы
         if len(new_diff) > 0:
             new_pids = list(new_diff)
-            new_pids.sort()
 
+            #Если прошлый процесс есть — его тоже добавим в коллекцию для получения нового статуса
+            if self.main.state['prev_state_process_PID']:
+                new_pids.append(self.main.state['prev_state_process_PID'])
+
+            new_pids.sort()
             new_state = self.getStateByProcessCollection(processes, new_pids)
    
         #Если какие-то процессы умерли
@@ -193,7 +197,7 @@ class Support:
                             is_target_pid_del = True
                     #Заглушка, иногда оно путается в показаниях, видимо что-то успевает умереть
                     except psutil.NoSuchProcess:
-                        pass
+                        continue
             
         #Если умер наш клиент или список проверяемых процессов изменился,
         #то тогда прогоняем по всей коллекции процессов

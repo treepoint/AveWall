@@ -38,7 +38,6 @@ class Tray():
         return self.main.config['MAIN']['locale']
 
     def initMenu(self):
-        
         self.menu = menu(
             item(lambda x: 
                     'Запускать вместе с Windows' if self.getLocale() == 'RU' else 'Autostart with Windows', 
