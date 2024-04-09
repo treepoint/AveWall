@@ -29,7 +29,7 @@ class Tray():
 
         #Запускаем трей
         self.tray.run()
-    
+        
     def runWorker(self):
         self.tray_worker = TrayWorker(self.main, self.wallpaperChainger)
         self.tray_worker.start()
@@ -100,6 +100,7 @@ class Tray():
 
     def onExit(self, icon=False, item=False):
         self.tray.stop()
+        self.wallpaperChainger.setDefaultWallpaper()
 
     def onConfigReload(self, icon=False, item=False):
         self.main.config = self.main.support.readConfig()
