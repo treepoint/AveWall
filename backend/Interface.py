@@ -79,7 +79,7 @@ class Interface():
     def open(self):
         width = 694
 
-        basic_height = 640
+        basic_height = 664
         height = min(1280, basic_height + 44*len(self.tray.main.config['PROCESSES']))
 
         eel.start( 'index.html', 

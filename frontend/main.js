@@ -611,6 +611,8 @@ function setRussian() {
         document.getElementById("close").innerHTML = "ЗАКРЫТЬ ОКНО";
         document.getElementById("exit").innerHTML = "ЗАКРЫТЬ ПРИЛОЖЕНИЕ";
 
+    document.getElementById("version").innerHTML = "Версия 0.4";
+
     //Выбор типа обоев в таблице
     i = 0;
     for (let row of process_table.rows) {
@@ -669,6 +671,8 @@ function setEnglish() {
         document.getElementById("reload-config").innerHTML = "RELOAD CONFIG";
         document.getElementById("close").innerHTML = "CLOSE WINDOW";
         document.getElementById("exit").innerHTML = "EXIT APPLICATION";
+
+    document.getElementById("version").innerHTML = "Version 0.4";
 
     //Выбор типа обоев в таблице
     i = 0;

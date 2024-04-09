@@ -26,6 +26,7 @@ class Main():
         self.state['prev_state'] = None
         self.state['prev_processes'] = None
         self.state['prev_state_process_PID'] = None
+        self.state['excluded_pids'] = []
          
         #Обрабатываем автостарт
         self.task_manager = TaskManager(self)
@@ -45,3 +46,6 @@ if __name__ == '__main__':
     else:
         if not main.support.chechDoubledStart():
             tray = Tray(main, wallpaperChainger)
+
+#TODO:
+#1. Номер версии во фронт

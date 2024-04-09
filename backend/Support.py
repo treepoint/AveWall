@@ -46,6 +46,66 @@ class Support:
 
         return config
     
+    def remove_del_pids_from_excluded(self, del_pids):
+        excluded_pids = self.main.state['excluded_pids']
+
+        for pid in del_pids:
+            excluded_pids.remove(pid)
+
+        self.main.state['excluded_pids'] = excluded_pids
+
+    def filterSystemPids(self, pids):
+        #чуть фильтранем, надеюсь в винде среднем хотя бы 500 служебных процессов
+        filtered_pids = set(filter(lambda x:x >= 500, pids))
+        
+        excluded_pids = []
+
+        #если раньше не фильтровали, то запустим полный анализ текущих PID'ов
+        if len(self.main.state['excluded_pids']) == 0:
+            excluded_locations_like = ['windows\\system32', 
+                                    'windows\\explorer.exe', 
+                                    'nvidia corporation', 
+                                    'windows\\systemapps', 
+                                    'microsoft\\windows defender', 
+                                    'program files\\amd']
+            
+            excluded_name_like = ['radeonsoftware', 
+                                'startmenuexperiencehost', 
+                                'vmmem', 
+                                'phoneexperiencehost', 
+                                'python.exe', 
+                                'systemsettings.exe']
+
+            for pid in filtered_pids:
+                try:
+                    pid_exe = str(psutil.Process(pid).exe()).lower()
+                except psutil.NoSuchProcess:
+                    continue
+
+                for el in excluded_locations_like:
+                    if el in pid_exe:
+                        excluded_pids.append(pid)
+                        continue
+                
+                try:
+                    pid_name = str(psutil.Process(pid).name()).lower()
+                except psutil.NoSuchProcess:
+                    continue
+
+                for en in excluded_name_like:
+                    if en in pid_name:
+                        excluded_pids.append(pid)
+                        continue
+
+        #Иначе просто вычтем ранее отфильтрованные
+        else:
+           excluded_pids = self.main.state['excluded_pids']
+                
+        filtered_pids = set(filter(lambda x:x not in excluded_pids, filtered_pids))
+
+        self.main.state['excluded_pids'] = excluded_pids
+        return filtered_pids
+    
     def getProcessDiff(self):
         #pid'ы с прошлого состояния
         prev_pids = copy.copy(self.main.state['prev_pids'])
@@ -53,11 +113,14 @@ class Support:
         #pid'ы что есть сейчас
         current_pids = set(psutil.pids())
 
-        #чуть фильтранем, надеюсь в винде среднем хотя бы 1к служебных процессов
-        current_pids = set(filter(lambda x:x >= 1000, current_pids))
+        #чуть фильтранем
+        current_pids = self.filterSystemPids(current_pids)
 
         new_diff = set()
         del_diff = set()
+
+        #Удаленные pid почистим из excluded, мало ли на их место кто другой придет
+        self.remove_del_pids_from_excluded(del_diff)
 
         #Находим разницу
         if not prev_pids:
