@@ -1,6 +1,7 @@
 pystray
-PyQt6
+PyQt5
 psutil
 auto-py-to-exe
 pyuac
 eel
+pywin32

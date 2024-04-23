@@ -611,7 +611,7 @@ function setRussian() {
         document.getElementById("close").innerHTML = "ЗАКРЫТЬ ОКНО";
         document.getElementById("exit").innerHTML = "ЗАКРЫТЬ ПРИЛОЖЕНИЕ";
 
-    document.getElementById("version").innerHTML = "Версия 0.4";
+    document.getElementById("version").innerHTML = "Версия 0.5";
 
     //Выбор типа обоев в таблице
     i = 0;
@@ -672,7 +672,7 @@ function setEnglish() {
         document.getElementById("close").innerHTML = "CLOSE WINDOW";
         document.getElementById("exit").innerHTML = "EXIT APPLICATION";
 
-    document.getElementById("version").innerHTML = "Version 0.4";
+    document.getElementById("version").innerHTML = "Version 0.5";
 
     //Выбор типа обоев в таблице
     i = 0;

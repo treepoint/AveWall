@@ -1,5 +1,5 @@
 import time
-from PyQt6.QtCore import QThread, pyqtSignal
+from PyQt5.QtCore import QThread, pyqtSignal
 
 class TrayWorker(QThread):
     def __init__(self, main, wallpaperChainger):

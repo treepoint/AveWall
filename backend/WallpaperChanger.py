@@ -16,15 +16,14 @@ class WallpaperChanger:
             case 'auto':
                 #Определяем есть ли указанные процессы
                 new_state = self.main.support.checkThatTargetProcessesRunning(self.main.config.items('PROCESSES'))
-
-                if new_state == 'no changes':
-                    return
             case 'black':
                 new_state = 'BLACK'
             case 'default':
                 new_state = 'DEFAULT'
 
         #Определяем и выставляем обои
+        if new_state == 'no changes':
+            return
         if new_state == 'BLACK':
             self.setBlackWallpaper()
         elif new_state == 'DEFAULT':

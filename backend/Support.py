@@ -54,54 +54,75 @@ class Support:
 
         self.main.state['excluded_pids'] = excluded_pids
 
+    def basicPidsFilter(self, pids, excluded_pids):
+        excluded_locations_like = ['windows\\system32', 
+                                   'windows\\explorer.exe', 
+                                   'nvidia corporation', 
+                                   'windows\\systemapps', 
+                                   'microsoft\\windows defender', 
+                                   'program files\\amd']
+            
+        excluded_name_like = ['radeonsoftware', 
+                              'startmenuexperiencehost', 
+                              'vmmem', 
+                              'phoneexperiencehost', 
+                              'python.exe', 
+                              'systemsettings.exe']
+
+
+        if self.main.state['prev_pids']:
+            pids_for_check = set(filter(lambda x:x not in self.main.state['prev_pids'], pids))
+        else:
+            pids_for_check = pids
+
+        for pid in pids_for_check:
+            #Нулевой нам не доступен — системный
+            if pid == 0:
+                continue
+
+            try:
+                pid_description = psutil.Process(pid)
+            except psutil.NoSuchProcess:
+                continue
+
+            pid_exe = pid_description.exe().lower()
+
+            for el in excluded_locations_like:
+                if el in pid_exe:
+                    excluded_pids.append(pid)
+                    continue
+            
+            pid_name = pid_description.name().lower()
+
+            for en in excluded_name_like:
+                if en in pid_name:
+                    excluded_pids.append(pid)
+                    continue
+        
+        return excluded_pids
+
     def filterSystemPids(self, pids):
         #чуть фильтранем, надеюсь в винде среднем хотя бы 500 служебных процессов
         filtered_pids = set(filter(lambda x:x >= 500, pids))
         
         excluded_pids = []
+        renew_excluded_pids = []
 
         #если раньше не фильтровали, то запустим полный анализ текущих PID'ов
         if len(self.main.state['excluded_pids']) == 0:
-            excluded_locations_like = ['windows\\system32', 
-                                    'windows\\explorer.exe', 
-                                    'nvidia corporation', 
-                                    'windows\\systemapps', 
-                                    'microsoft\\windows defender', 
-                                    'program files\\amd']
-            
-            excluded_name_like = ['radeonsoftware', 
-                                'startmenuexperiencehost', 
-                                'vmmem', 
-                                'phoneexperiencehost', 
-                                'python.exe', 
-                                'systemsettings.exe']
+            self.basicPidsFilter(filtered_pids, excluded_pids)
+            filtered_pids = set(filter(lambda x:x not in excluded_pids, filtered_pids))
 
-            for pid in filtered_pids:
-                try:
-                    pid_exe = str(psutil.Process(pid).exe()).lower()
-                except psutil.NoSuchProcess:
-                    continue
-
-                for el in excluded_locations_like:
-                    if el in pid_exe:
-                        excluded_pids.append(pid)
-                        continue
-                
-                try:
-                    pid_name = str(psutil.Process(pid).name()).lower()
-                except psutil.NoSuchProcess:
-                    continue
-
-                for en in excluded_name_like:
-                    if en in pid_name:
-                        excluded_pids.append(pid)
-                        continue
-
-        #Иначе просто вычтем ранее отфильтрованные
+        #Иначе — вычтем ранее отфильтрованные, а потом остаток еще раз фильтранем
         else:
            excluded_pids = self.main.state['excluded_pids']
-                
-        filtered_pids = set(filter(lambda x:x not in excluded_pids, filtered_pids))
+           filtered_pids = set(filter(lambda x:x not in excluded_pids, filtered_pids))
+
+           self.basicPidsFilter(filtered_pids, renew_excluded_pids)
+           filtered_pids = set(filter(lambda x:x not in renew_excluded_pids, filtered_pids))
+
+           for ex_pid in renew_excluded_pids:
+               excluded_pids.append(ex_pid)
 
         self.main.state['excluded_pids'] = excluded_pids
         return filtered_pids
@@ -214,14 +235,14 @@ class Support:
         process_diff = self.getProcessDiff()
         new_state = self.getNewStateByProcesses(process_diff, processes)
 
+        #Проверяем, что если прошлое состояние осталось таким же как и раньше, то ничего не меняем
+        if self.main.state['prev_state'] == new_state:
+            return 'no changes'
+
         if not new_state:
             self.main.state['prev_state'] = None
             self.main.state['prev_state_process_PID'] = None
             return 'DEFAULT'
-
-        #Проверяем, что если прошлое состояние осталось таким же как и раньше, то ничего не меняем
-        if self.main.state['prev_state'] == new_state:
-            return 'no changes'
         else:
         #Иначе меняем записанное прошлое состояние и возвращаем статус
             self.main.state['prev_state'] = new_state

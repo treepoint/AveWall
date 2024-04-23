@@ -27,6 +27,7 @@ class Main():
         self.state['prev_processes'] = None
         self.state['prev_state_process_PID'] = None
         self.state['excluded_pids'] = []
+        self.state['checked_pids'] = []
          
         #Обрабатываем автостарт
         self.task_manager = TaskManager(self)
