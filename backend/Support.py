@@ -85,19 +85,27 @@ class Support:
             except psutil.NoSuchProcess:
                 continue
 
-            pid_exe = pid_description.exe().lower()
+            try:
+                pid_exe = pid_description.exe().lower()
+                
+                for el in excluded_locations_like:
+                    if el in pid_exe:
+                        excluded_pids.append(pid)
+                        continue
 
-            for el in excluded_locations_like:
-                if el in pid_exe:
-                    excluded_pids.append(pid)
-                    continue
+            except psutil.NoSuchProcess:
+                continue
             
-            pid_name = pid_description.name().lower()
+            try:
+                pid_name = pid_description.name().lower()
 
-            for en in excluded_name_like:
-                if en in pid_name:
-                    excluded_pids.append(pid)
-                    continue
+                for en in excluded_name_like:
+                    if en in pid_name:
+                        excluded_pids.append(pid)
+                        continue
+
+            except psutil.NoSuchProcess:
+                continue
         
         return excluded_pids
 

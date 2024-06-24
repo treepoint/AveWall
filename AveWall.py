@@ -37,13 +37,17 @@ class Main():
         self.task_manager.autostartProcessing()
 
 if __name__ == '__main__':
-    main = Main()
-    wallpaperChainger = WallpaperChanger(main)
+    #hardcoded exception just for avoid crushes at exceptional situations
+    try:
+        main = Main()
+        wallpaperChainger = WallpaperChanger(main)
 
-    if main.config.has_option('AUTO','action'):
-        main.config.remove_section('AUTO')
-        
-        main.support.writeConfig(main.config)
-    else:
-        if not main.support.chechDoubledStart():
-            tray = Tray(main, wallpaperChainger)
+        if main.config.has_option('AUTO','action'):
+            main.config.remove_section('AUTO')
+            
+            main.support.writeConfig(main.config)
+        else:
+            if not main.support.chechDoubledStart():
+                tray = Tray(main, wallpaperChainger)
+    except Exception as error:
+        print(f'unhandled error occur: {error}')
